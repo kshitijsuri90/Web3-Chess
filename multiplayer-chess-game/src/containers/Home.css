@@ -1,0 +1,269 @@
+/*
+font-family: 'Open Sans', sans-serif;
+font-family: 'Raleway', sans-serif;
+font-weights - 400 - 700
+*/
+
+body {
+  font-size: 14px;
+  font-family: "Open Sans", sans-serif;
+  background-color: hsl(218, 28%, 13%);
+  background-image: url("../chess/assets/bg-curvy-mobile.svg");
+  background-repeat: no-repeat;
+  background-position-x: center;
+  color: white;
+}
+
+.App {
+  max-width: 100vw;
+  max-height: 100vh;
+  margin: 0 auto;
+}
+
+h1 {
+  font-size: 2.35em;
+}
+
+h2 {
+  font-size: 2.15em;
+}
+
+h3 {
+  font-size: 1.15em;
+}
+
+h1,
+h2,
+.navbar__item {
+  font-family: sans-serif;
+}
+
+/*----- Header & Navbar -----*/
+
+.header__navbar {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.logo {
+  width: 30px;
+  height: 50px;
+}
+
+.navbar li {
+  color: white;
+  display: inline;
+  padding: 0 10px;
+}
+
+.hero__img,
+.Cta__img {
+  width: 80vw;
+  max-width: 400px;
+  /*max-height: 40vh;*/
+}
+
+@media screen and (min-width: 500px) {
+  .header__navbar {
+    padding: 35px;
+  }
+  .logo {
+    width: 10%;
+    height: 10%;
+  }
+  .navbar li {
+    font-size: 1.3rem;
+  }
+}
+
+/*----- Hero Section -----*/
+.hero__section {
+  background-position: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  margin-top: auto;
+  margin-bottom: auto;
+  margin-left: 30px;
+}
+
+.hero__img,
+.hero__desc,
+.hero__CTA {
+  max-width: 600px;
+  margin-top: auto;
+  margin-bottom: auto;
+}
+
+.hero__img {
+  margin-bottom: 20px;
+}
+
+.hero__desc {
+  padding: 25px 25px;
+  max-width: 400px;
+  margin-bottom: 15px;
+}
+
+.banner_section {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  padding: 20px 25px;
+  margin-top: 60px;
+}
+
+/*----- CTA Section -------*/
+.Cta__section {
+  color: #000000;
+  background-color: #ffffff;
+  display: flex;
+  height: 60vh;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  margin-top: 60px;
+}
+
+.Cta__img {
+  align-self: center;
+  margin-bottom: 10px;
+}
+
+.Cta__link {
+  color: hsl(176, 68%, 64%);
+  text-decoration: none;
+  padding-bottom: 3px;
+  border-bottom: 1px solid hsl(176, 68%, 64%);
+}
+
+@media screen and (min-width: 800px) {
+  .banner_section {
+    display: grid;
+    grid-template-areas: "img text";
+  }
+  .Cta__section {
+    display: grid;
+    grid-template-areas: "text img";
+    grid-gap: 50px;
+  }
+  .Cta__img {
+    grid-area: img;
+  }
+
+  .Cta__text {
+    margin-top: auto;
+    margin-bottom: auto;
+    grid-area: text;
+  }
+}
+
+/*----- Footer ------*/
+.footer {
+  background-color: hsl(216, 53%, 9%);
+  width: 100vw;
+}
+
+.footer,
+.footer__content {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+}
+
+.footer__img {
+  align-self: flex-start;
+  margin: 200px 0 20px 25px;
+}
+
+.footer__info,
+.footer__nav1,
+.footer__nav2 {
+  margin: 0 0 35px 25px;
+}
+
+.info {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: center;
+}
+
+.info__icon {
+  margin-right: 10px;
+}
+
+.location {
+  align-self: flex-start;
+  position: relative;
+  top: 15px;
+}
+
+.footer__nav1,
+.footer__nav2 {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: flex-start;
+}
+
+.nav__link {
+  text-decoration: none;
+  color: white;
+  margin-bottom: 10px;
+}
+
+.custom_button {
+  align-items: center;
+  padding: 20px 50px 10px 50px;
+  height: auto;
+  justify-content: center;
+  background: linear-gradient(217deg, hsl(176, 68%, 64%), hsl(198, 60%, 50%));
+  border-radius: 25px;
+  color: white;
+  font-family: inherit;
+  margin: 15px;
+}
+
+@media screen and (min-width: 800px) {
+  .footer {
+    max-width: 100vw;
+  }
+  .footer__content {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+    overflow: hidden;
+    margin-top: 50px;
+  }
+
+  .footer__img {
+    margin: 0;
+    position: relative;
+    top: 50px;
+    left: 50px;
+  }
+  .footer__info {
+    max-width: 40%;
+    display: row;
+    grid-template-areas:
+      "location phone"
+      "location email";
+    justify-items: center;
+    grid-column-gap: 80px;
+  }
+  .contact__location {
+    grid-area: location;
+  }
+  .contact__phone {
+    grid-area: phone;
+  }
+  .contact__email {
+    grid-area: email;
+  }
+}

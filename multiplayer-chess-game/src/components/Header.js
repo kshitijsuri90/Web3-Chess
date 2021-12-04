@@ -13,10 +13,10 @@ function Header () {
           Tournament
         </li>
         <li id="features" className="navbar__item">
-          Puzzles
+          <a href="/puzzles"> Puzzles </a>
         </li>
         <li id="team" className="navbar__item">
-          Marketplace
+        <a href="/marketplace"> Marketplace </a>
         </li>
         <li id="signin" className="navbar__item">
           Sign In

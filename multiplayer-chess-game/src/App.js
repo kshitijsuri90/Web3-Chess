@@ -5,6 +5,8 @@ import { ColorContext } from './context/colorcontext';
 import Onboard from './onboard/onboard';
 import JoinGame from './onboard/joingame';
 import ChessGame from './chess/ui/chessgame';
+import Puzzles from './pages/puzzles';
+import Marketplace from './pages/marketplace';
 import Home from './containers/Home';
 import firebase from "firebase";
 /*
@@ -71,6 +73,15 @@ function App() {
               setStake={setStake}
             />
           </Route>
+          <Route path="/puzzles" exact>
+            <Puzzles />
+          </Route>
+
+          <Route path="/marketplace" exact>
+            <Marketplace />
+          </Route>
+
+
           <Route path="/game/:gameid" exact>
             {didRedirect ? (
               <React.Fragment>

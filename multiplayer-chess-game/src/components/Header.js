@@ -1,38 +1,64 @@
 import React from "react";
-import Logo from "../chess/assets/logo.svg";
+import Logo from "../chess/assets/chess_white.png";
+import Typography from "@mui/material/Typography";
 
-function Header () {
-  
-  function goToChallengePage(){
+function Header() {
+  function goToChallengePage() {
     window.open("/challenges", "_self");
   }
 
-  function goToHome(){
+  function goToHome() {
     window.open("/", "_self");
   }
 
   return (
     <div className="header__navbar">
-      <img src={Logo} alt="" className="logo" />
+      <div
+        style={{
+          display: "flex",
+          alignItems: "center",
+          flexWrap: "wrap",
+        }}
+      >
+        <img
+          src={Logo}
+          alt=""
+          className="logo"
+          style={{ width: "50px", height: "50px", marginRight: "20px" }}
+        />
+        <Typography component="h1" variant="h5" fontFamily="monospace">
+          PROJECT CHESSTOPIA
+        </Typography>
+      </div>
       <ul className="navbar">
         <li id="features" className="navbar__item" onClick={goToHome}>
-          Home
+          <Typography component="h5" variant="h9" fontFamily="sans-serif">
+            HOME
+          </Typography>
         </li>
         <li id="features" className="navbar__item" onClick={goToChallengePage}>
-          Live Challenges
+          <Typography component="h5" variant="h9" fontFamily="sans-serif">
+            BOUNTIES
+          </Typography>
         </li>
         <li id="features" className="navbar__item">
-          Puzzles
+          <Typography component="h5" variant="h9" fontFamily="sans-serif">
+            PUZZLES
+          </Typography>
         </li>
         <li id="team" className="navbar__item">
-          Marketplace
+          <Typography component="h5" variant="h9" fontFamily="sans-serif">
+            MARKETPLACE
+          </Typography>
         </li>
         <li id="signin" className="navbar__item">
-          Sign In
+          <Typography component="h5" variant="h9" fontFamily="sans-serif">
+            SIGN IN
+          </Typography>
         </li>
       </ul>
     </div>
   );
 }
 
-export default Header 
+export default Header;

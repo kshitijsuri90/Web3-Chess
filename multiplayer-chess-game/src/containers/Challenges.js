@@ -40,6 +40,9 @@ class ChallengePage extends React.Component {
     return (
       <div className="Home">
         <Header />
+        <div className="header__navbar">
+          <h1>Live Challenges</h1>
+        </div>
         {this.state.challenges.map((data, id) => {
           return (
             <ChallengeListItem
@@ -49,7 +52,7 @@ class ChallengePage extends React.Component {
               participationFees={data.participationFees}
               name={data.name}
               goToGame={this.removeFromList}
-              creator= {data.creator}
+              creator={data.creator}
             />
           );
         })}

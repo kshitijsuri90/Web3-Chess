@@ -1,4 +1,3 @@
-import React from "react";
 import Game from "../model/chess";
 import Square from "../model/square";
 import { Stage, Layer } from "react-konva";
@@ -9,20 +8,35 @@ import Piece from "./piece";
 import piecemap from "./piecemap";
 import { useParams } from "react-router-dom";
 import { ColorContext } from "../../context/colorcontext";
-import Home from "../../containers/Home";
 import NFTPage from "../../containers/NFTCreatePage";
-import { useState, useEffect } from "react";
+import * as React from "react";
+import Box from "@mui/material/Box";
+import Grid from "@mui/material/Grid";
+import CountdownTimer from "react-component-countdown-timer";
+
 
 const socket = require("../../connection/socket").socket;
 
-class ChessGame extends React.Component {
+class SimpleCountdownTimer extends React.Component {
+  render() {
+    var settings = {
+      count: 5432,
+      border: true,
+      showTitle: true,
+      noPoints: true,
+    };
+    return <CountdownTimer {...settings} />;
+  }
+}
 
+
+class ChessGame extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      whiteTimerCountdown: props.time,
+      whiteTimerCountdown: props.time860,
       blackTimerCountdown: props.time,
-      gameState: new Game( props.color),
+      gameState: new Game(props.color),
       draggedPieceTargetId: "", // empty string means no piece is being dragged
       playerTurnToMoveIsWhite: true,
       whiteKingInCheck: false,
@@ -59,7 +73,7 @@ class ChessGame extends React.Component {
     const countdown = this.state.playerTurnToMoveIsWhite
       ? this.state.whiteTimerCountdown
       : this.state.blackTimerCountdown;
-      //console.log(this.timer);
+    //console.log(this.timer);
     if (countdown === 0) {
       if (this.state.playerTurnToMoveIsWhite) {
         alert("Time's up. Black wins!");
@@ -67,7 +81,6 @@ class ChessGame extends React.Component {
         this.setState({
           gameOver: true,
         });
-        
       } else {
         alert("Time's up. White wins!");
 
@@ -406,35 +419,45 @@ const ChessGameWrapper = (props) => {
   return (
     <React.Fragment>
       {opponentDidJoinTheGame ? (
-        <div>
-          <h4 style={{ textAlign: "center", marginTop: "20px" }}>
-            {" "}
-            Time {time}
-          </h4>
-          <h4 style={{ textAlign: "center", marginTop: "20px" }}>
-            {" "}
-            Opponent: {opponentUserName}
-          </h4>
-          <h4 style={{ textAlign: "center", marginTop: "20px" }}>
-            {" "}
-            Stake: {opponentStake}{" "}
-          </h4>
-          <div className="header__navbar" style={{ display: "flex" }}>
+        <Grid>
+          <Box m={2} p={3}>
+          <Grid item xs={6} md={8}>
             <ChessGame
               playAudio={play}
               gameId={gameid}
               color={color.didRedirect}
               time={30}
             />
-          </div>
-          <h4>
-            {" "}
-            You: {props.myUserName} Stake{props.stake}{" "}
-          </h4>
-        </div>
+          </Grid>
+          </Box>
+          <Grid item xs={6} md={4}>
+            <div>
+              <h4 style={{ textAlign: "center", marginTop: "20px" }}>
+                {" "}
+                Time {time}
+              </h4>
+              <h4 style={{ textAlign: "center", marginTop: "20px" }}>
+                {" "}
+                Opponent: {opponentUserName}
+              </h4>
+              <h4 style={{ textAlign: "center", marginTop: "20px" }}>
+                {" "}
+                Stake: {opponentStake}{" "}
+              </h4>
+              <div className="header__navbar" style={{ display: "flex" }}></div>
+              <h4>
+                {" "}
+                You: {props.myUserName} Stake{props.stake}{" "}
+              </h4>
+            </div>
+          </Grid>
+        </Grid>
       ) : gameSessionDoesNotExist ? (
         <div>
-          <h1 style={{ textAlign: "center", marginTop: "200px" }}> :( </h1>
+          <h1 style={{ textAlign: "center", marginTop: "200px" }}>
+            {" "}
+            Could not find the game :({" "}
+          </h1>
         </div>
       ) : (
         <div>

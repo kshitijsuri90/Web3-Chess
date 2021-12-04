@@ -1,11 +1,18 @@
-import React from "react";
 import { Redirect } from "react-router-dom";
 import uuid from "uuid/v4";
 import { ColorContext } from "../context/colorcontext";
-const socket = require("../connection/socket").socket;
+import * as React from "react";
+import Button from "@mui/material/Button";
+import CssBaseline from "@mui/material/CssBaseline";
+import TextField from "@mui/material/TextField";
+import Paper from "@mui/material/Paper";
+import Box from "@mui/material/Box";
+import Grid from "@mui/material/Grid";
+import Typography from "@mui/material/Typography";
 /**
  * Onboard is where we create the game room.
  */
+const socket = require("../connection/socket").socket;
 
 class CreateNewGame extends React.Component {
   state = {
@@ -30,161 +37,156 @@ class CreateNewGame extends React.Component {
      * with a unique identifier.
      */
     var newGameRoomId = uuid();
-    newGameRoomId+="t"+this.state.time;
+    this.props.didRedirect();
+    this.props.setUserName(this.state.userName);
+    this.props.setTime(this.state.time);
+    this.props.setStake(this.state.stake);
+    this.setState({
+      didGetUserName: true,
+    });
+    newGameRoomId += "t" + this.state.time;
     // set the state of this component with the gameId so that we can
     // redirect the user to that URL later.
     this.setState({
       gameId: newGameRoomId,
+      didGetUserName: true,
     });
 
     // emit an event to the server to create a new room
     socket.emit("createNewGame", newGameRoomId);
   };
 
-  typingUserName = () => {
+  typingUserName = (e) => {
     // grab the input text from the field from the DOM
-    const typedText = this.textArea1.current.value;
+    const typedText = e.target.value;
+    console.log(typedText)
     // set the state with that text
     this.setState({
       userName: typedText,
     });
   };
 
-  timeSelection = () => {
+  timeSelection = (e) => {
     // grab the input text from the field from the DOM
-    const typedText = this.textArea2.current.value;
+    const typedText = e.target.value;
     // set the state with that text
+    console.log(typedText);
     this.setState({
       time: typedText,
     });
   };
 
   colourSelection = (e) => {
-    const {name,value} = e.target;
+    const { name, value } = e.target;
     this.setState({
       colour: value,
     });
   };
 
-  stakesCollected = () => {
-    const typedText = this.textArea3.current.value;
+  stakesCollected = (e) => {
+    const typedText = e.target.value;
     // set the state with that text
     this.setState({
-        stake: typedText,
+      stake: typedText,
     });
-  }
+  };
 
   render() {
     // !!! TODO: edit this later once you have bought your own domain.
-
-    return (
-      <React.Fragment>
-        {this.state.didGetUserName ? (
-          <Redirect to={"/game/" + this.state.gameId}>
-            <button
-              className="btn btn-success"
-              style={{
-                marginLeft: String(window.innerWidth / 2 - 60) + "px",
-                width: "120px",
-              }}
+    return this.state.didGetUserName ? (
+      <Redirect to={"/game/" + this.state.gameId}>
+        <button
+          className="btn btn-success"
+          style={{
+            marginLeft: String(window.innerWidth / 2 - 60) + "px",
+            width: "120px",
+          }}
+        >
+          Start Game
+        </button>
+      </Redirect>
+    ) : (
+      <Grid container component="main" sx={{ height: "100vh" }}>
+        <CssBaseline />
+        <Grid
+          item
+          xs={false}
+          sm={4}
+          md={7}
+          sx={{
+            backgroundImage:
+              "url(https://images.unsplash.com/photo-1588412079929-790b9f593d8e?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8OHx8Y2hlc3N8ZW58MHx8MHx8&w=1000&q=80)",
+            backgroundRepeat: "no-repeat",
+            backgroundColor: (t) =>
+              t.palette.mode === "light"
+                ? t.palette.grey[50]
+                : t.palette.grey[900],
+            backgroundSize: "cover",
+            backgroundPosition: "center",
+          }}
+        />
+        <Grid item xs={12} sm={8} md={5} component={Paper} elevation={6} square>
+          <Box
+            sx={{
+              my: 8,
+              mx: 4,
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+            }}
+          >
+            <Typography component="h1" variant="h5">
+              Create a Game
+            </Typography>
+            <Box
+              component="form"
+              noValidate
+              onSubmit={this.send}
+              sx={{ mt: 1 }}
             >
-              Start Game
-            </button>
-          </Redirect>
-        ) : (
-          <div>
-            <h1 style={{ textAlign: "center", margin: "10px" }}>
-              Enter game details
-            </h1>
-            <div className="hero__section">
-              <div className="header__navbar">
-                White
-                <input
-                  style={{ marginRight: "20px" }}
-                  id="white"
-                  value="0"
-                  name="white"
-                  type="radio"
-                  checked={this.state.colour == "0"}
-                  onChange={this.colourSelection}
-                />
-                Black
-                <input
-                  id="black"
-                  style={{ marginRight: "20px" }}
-                  value="1"
-                  name="black"
-                  type="radio"
-                  checked={this.state.colour == "1"}
-                  onChange={this.colourSelection}
-                />
-              </div>
-              <label>
-                Username
-                <input
-                  id=""
-                  style={{
-                    width: "240px",
-                    margin: "10px",
-                  }}
-                  ref={this.textArea1}
-                  onInput={this.typingUserName}
-                ></input>
-              </label>
-              <label>
-                Time
-                <input
-                  type="number"
-                  id=""
-                  style={{
-                    width: "240px",
-                    margin: "10px",
-                  }}
-                  ref={this.textArea2}
-                  onInput={this.timeSelection}
-                ></input>
-              </label>
-              <label>
-                Stakes
-                <input
-                  type="number"
-                  id=""
-                  style={{
-                    width: "240px",
-                    margin: "10px",
-                  }}
-                  ref={this.textArea3}
-                  onInput={this.stakesCollected}
-                ></input>
-              </label>
-            </div>
-            <button
-              className="btn btn-primary"
-              style={{
-                marginLeft: String(window.innerWidth / 2 - 60) + "px",
-                width: "120px",
-                marginTop: "62px",
-              }}
-              disabled={!(this.state.userName.length > 0)}
-              onClick={() => {
-                // When the 'Submit' button gets pressed from the username screen,
-                // We should send a request to the server to create a new room with
-                // the uuid we generate here.
-                this.props.didRedirect();
-                this.props.setUserName(this.state.userName);
-                this.props.setTime(this.state.time);
-                this.props.setStake(this.state.stake);
-                this.setState({
-                  didGetUserName: true,
-                });
-                this.send();
-              }}
-            >
-              Submit
-            </button>
-          </div>
-        )}
-      </React.Fragment>
+              <TextField
+                onChange={this.typingUserName}
+                margin="normal"
+                required
+                fullWidth
+                id="username"
+                label="Username"
+                name="username"
+                autoComplete="username"
+                autoFocus
+              />
+              <TextField
+              onChange={this.timeSelection}
+                margin="normal"
+                required
+                fullWidth
+                name="time"
+                label="Time"
+                type="number"
+                id="time"
+              />
+              <TextField
+              onChange={this.stakesCollected}
+                margin="normal"
+                required
+                fullWidth
+                name="stake"
+                label="Stake"
+                type="number"
+                id="stake"
+              />
+              <Button
+                type="submit"
+                fullWidth
+                variant="contained"
+                sx={{ mt: 3, mb: 2 }}
+              >
+                Start Game
+              </Button>
+            </Box>
+          </Box>
+        </Grid>
+      </Grid>
     );
   }
 }

@@ -1,12 +1,15 @@
+import "./../../containers/Home.css";
 import React from "react";
-import Hero from "../../components/Banner";
+import Hero from "../../components/Header";
 import Footer from "../../components/Footer";
 
 function Home() {
   return (
     <div className="Home">
       <Hero/>
-       <h2> NFT Marketplace </h2>
+      <section className="banner_section_local">
+      <h2> Moves Marketplace </h2>
+        </section>
       <Footer />
     </div>
   );

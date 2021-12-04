@@ -109,6 +109,16 @@ h2,
   margin-bottom: 15px;
 }
 
+.banner_section_local {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  padding: 20px 25px;
+  margin-top: 10px;
+}
+
+
 .banner_section {
   display: flex;
   flex-direction: column;

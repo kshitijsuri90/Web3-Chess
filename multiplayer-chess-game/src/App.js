@@ -6,6 +6,7 @@ import Onboard from './onboard/onboard';
 import JoinGame from './onboard/joingame';
 import ChessGame from './chess/ui/chessgame';
 import Home from './containers/Home';
+import Challenge from './containers/Challenges';
 import firebase from "firebase";
 /*
  *  Frontend flow: 
@@ -70,6 +71,9 @@ function App() {
               setTime={setTime}
               setStake={setStake}
             />
+          </Route>
+          <Route path="/challenges" exact>
+            <Challenge />
           </Route>
           <Route path="/game/:gameid" exact>
             {didRedirect ? (

@@ -14,6 +14,7 @@ class Game {
     // console.log("this player's color is white: " + this.thisPlayersColorIsWhite)
     this.chessBoard = this.makeStartingBoard(); // the actual chessBoard
     this.chess = new Chess();
+    this.moves = [];
 
     this.toCoord = thisPlayersColorIsWhite
       ? {
@@ -120,6 +121,7 @@ class Game {
 
   undoMove(pieceId, to, isMyMove){
       console.log(to);
+      console.log(isMyMove);
       const to2D = isMyMove
       ? {
           105: 0,
@@ -150,12 +152,14 @@ class Game {
       return;
     }
 
-    const y = pieceCoordinates[1];
-    const x = pieceCoordinates[0];
+    var obj = this.moves.pop();
+    console.log(obj);
+    const y = obj.to_y;
+    const x = obj.to_x;
 
     // new coordinates
-    const to_y = to2D[to[1]];
-    const to_x = to2D[to[0]];
+    const to_y = obj.y;
+    const to_x = obj.x;
 
     const originalPiece = currentBoard[y][x].getPiece();
 
@@ -290,6 +294,7 @@ class Game {
     console.log(x + " " + y);
     console.log(this.toChessMove([x, y], to2D));
     console.log("to " + to_x + " " + to_y);
+    this.moves.push({x: x, y: y, to_x: to_x, to_y: to_y});
     console.log(this.toChessMove(to, to2D));
     console.log(pieceId[1]);
     const moveAttempt = !isPromotion

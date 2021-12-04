@@ -179,9 +179,6 @@ class ChessGame extends React.Component {
     const currentBoard = currentGame.getBoard();
     const selectedId = this.state.draggedPieceTargetId;
     console.log(e);
-    const previousPosition = this.inferCoord(
-      
-    );
     const finalPosition = this.inferCoord(
       e.target.x() + 90,
       e.target.y() + 90,

@@ -27,7 +27,7 @@ function Banner() {
           </p>
           <div className="header__navbar">
             <Button text="Create Game" onClick={createGame}/>
-            <Button text="Join Game" onClick={joinGame}/>
+            <Button text="Create Challenge" onClick={joinGame}/>
           </div>
         </div>
       </section>

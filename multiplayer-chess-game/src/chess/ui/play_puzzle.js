@@ -5,9 +5,8 @@ import { Stage, Layer } from "react-konva";
 import Board from "../assets/chessBoard.png";
 import Piece from "./piece";
 import piecemap from "./piecemap";
-import Puzzle from "./play_puzzle";
 
-class ChessGame extends React.Component {
+class Puzzle extends React.Component {
   state = {
     gameState: new Game(this.props.color),
     draggedPieceTargetId: "", // empty string means no piece is being dragged
@@ -16,14 +15,19 @@ class ChessGame extends React.Component {
     blackKingInCheck: false,
     moves: [],
     gameOver: false,
-    startIndexOfNFT: 0,
-    endIndexOFNFT: 0,
     gameIndex: -1,
     isMyMove: this.props.color ? true : false,
-    initialNFTGameState: new Game(this.props.color),
-    firstMoveInNFt: this.props.color,
-    submitNFT: false,
   };
+
+  getNFTData(){
+      // Function to get game state and moves currently taking from props
+      this.setState({
+          gameState: this.props.initialNFTGameState,
+          moves: this.props.moves,
+      })
+      console.log(this.state.gameState);
+      console.log(this.props.moves);
+  }
 
   componentDidMount() {
     console.log(this.props.myUserName);
@@ -208,9 +212,6 @@ class ChessGame extends React.Component {
     console.log(this.state.startIndexOfNFT);
     console.log(this.state.endIndexOFNFT);
     console.log(this.state.initialNFTGameState);
-    this.setState({
-      submitNFT: true,
-    });
   };
 
   makeStart = () => {
@@ -237,15 +238,7 @@ class ChessGame extends React.Component {
             Look at the current game state in the model and populate the UI accordingly
         */
     // console.log(this.state.gameState.getBoard())
-    return this.state.submitNFT ? (
-      <Puzzle
-        moves={this.state.moves.slice(
-          this.state.startIndexOfNFT,
-          this.state.endIndexOFNFT + 1
-        )}
-        gameState={this.state.initialNFTGameState}
-      />
-    ) : (
+    return (
       <div className="Home">
         <button onClick={this.makeNextMove}>Next</button>
         <button onClick={this.goToPreviousMove}>Previous</button>
@@ -305,4 +298,4 @@ class ChessGame extends React.Component {
   }
 }
 
-export default ChessGame;
+export default Puzzle;

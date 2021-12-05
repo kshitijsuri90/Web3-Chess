@@ -1,27 +1,63 @@
-import React, { useEffect, useState } from "react";
-import { getWeb3 } from "./utils.js";
+import React from 'react'
+import { useWeb3React } from '@web3-react/core'
 
-function App() {
-  const [web3, setWeb3] = useState(undefined);
-  const [accounts, setAccounts] = useState(undefined);
-  window.ethereum.on("accountsChanged", (accounts) => {
-    setAccounts(accounts);
-  });
+import { useEagerConnect, useInactiveListener } from './hooks'
+import connectorList, { resetWalletConnectConnector } from './connectors'
+import { Dropdown } from 'semantic-ui-react'
+import 'semantic-ui-css/components/dropdown.css'
+import 'semantic-ui-css/components/menu.css'
+import 'semantic-ui-css/components/transition.css'
 
-  const connect = async () => {
-    const web3 = await getWeb3();
-    const accounts = await web3.eth.getAccounts();
-    const networkId = await web3.eth.net.getId();
-    console.log("accounts", accounts[0]);
-    console.log(networkId);
+import 'semantic-ui-css/semantic.min.js'
+
+const ConnectWallet = () => {
+  const { activate, deactivate, active, error } = useWeb3React();
+
+  const triedEager = useEagerConnect();
+
+  useInactiveListener(!triedEager);
+
+  const handleClick = (connectorName) => () => {
+    activate(connectorList[connectorName]);
+  };
+
+  const handleDisconnect = () => {
+    deactivate();
+  };
+
+  const handleRetry = () => {
+    resetWalletConnectConnector(connectorList['WalletConnect']);
+    deactivate();
   };
 
   return (
-    <div className="container">
-      <button onClick={() => connect()}> Connect </button>
-      {console.log(accounts) && accounts[0]}{" "}
-    </div>
-  );
-}
+    <Dropdown text='Wallet' pointing className='link item'>
 
-export default App;
+
+      {(() => {
+        if (active) {
+          return <Dropdown.Menu>
+            <Dropdown.Item className="button-disconnect" onClick={handleDisconnect}>
+              Disconnect Wallet
+            </Dropdown.Item>
+          </Dropdown.Menu>
+        } else {
+          if (!error) {
+            return <Dropdown.Menu>
+              <Dropdown.Item onClick={handleClick('MetaMask')}>MetaMask</Dropdown.Item>
+              <Dropdown.Item onClick={handleClick('WalletConnect')}>WalletConnect</Dropdown.Item>
+              <Dropdown.Item onClick={handleClick('WalletLink')}>WalletLink</Dropdown.Item>
+            </Dropdown.Menu>
+          } else {
+            return <Dropdown.Menu>
+              <Dropdown.Item onClick={handleRetry}>Retry</Dropdown.Item>
+            </Dropdown.Menu>
+          }
+        }
+      })()}
+
+    </Dropdown>
+  );
+};
+
+export default ConnectWallet;

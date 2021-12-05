@@ -235,6 +235,7 @@ h2,
   align-items: center;
   padding: 20px 50px 10px 50px;
   height: auto;
+  display: flex;
   justify-content: center;
   background: linear-gradient(217deg, hsl(176, 68%, 64%), hsl(198, 60%, 50%));
   border-radius: 25px;

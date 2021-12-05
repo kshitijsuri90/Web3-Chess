@@ -12,30 +12,18 @@ import NFTPage from "../../containers/NFTCreatePage";
 import * as React from "react";
 import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid";
-import CountdownTimer from "react-component-countdown-timer";
-
+import Paper from "@mui/material/Paper";
+import Typography from "@mui/material/Typography";
+import SimpleCountdownTimer from "../../components/Timer";
 
 const socket = require("../../connection/socket").socket;
-
-class SimpleCountdownTimer extends React.Component {
-  render() {
-    var settings = {
-      count: 5432,
-      border: true,
-      showTitle: true,
-      noPoints: true,
-    };
-    return <CountdownTimer {...settings} />;
-  }
-}
-
 
 class ChessGame extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      whiteTimerCountdown: props.time860,
-      blackTimerCountdown: props.time,
+      whiteTimerCountdown: props.time * 60,
+      blackTimerCountdown: props.time * 60,
       gameState: new Game(props.color),
       draggedPieceTargetId: "", // empty string means no piece is being dragged
       playerTurnToMoveIsWhite: true,
@@ -44,7 +32,6 @@ class ChessGame extends React.Component {
       moves: [],
       gameOver: false,
     };
-    this.timer = setInterval(() => this.tick(), props.timeout || 1000);
   }
 
   componentDidMount() {
@@ -67,38 +54,6 @@ class ChessGame extends React.Component {
         });
       }
     });
-  }
-
-  tick() {
-    const countdown = this.state.playerTurnToMoveIsWhite
-      ? this.state.whiteTimerCountdown
-      : this.state.blackTimerCountdown;
-    //console.log(this.timer);
-    if (countdown === 0) {
-      if (this.state.playerTurnToMoveIsWhite) {
-        alert("Time's up. Black wins!");
-        clearInterval(this.timer);
-        this.setState({
-          gameOver: true,
-        });
-      } else {
-        alert("Time's up. White wins!");
-
-        clearInterval(this.timer);
-        this.setState({
-          gameOver: true,
-        });
-      }
-    } else if (this.state.playerTurnToMoveIsWhite) {
-      //console.log(this.state.playerTurnToMoveIsWhite + " " + countdown);
-      this.setState({
-        whiteTimerCountdown: countdown - 1,
-      });
-    } else {
-      this.setState({
-        blackTimerCountdown: countdown - 1,
-      });
-    }
   }
 
   startDragging = (e) => {
@@ -177,12 +132,13 @@ class ChessGame extends React.Component {
       this.setState({
         gameOver: true,
       });
-
+      this.props.gameOverMethod(true);
       alert("WHITE WON BY CHECKMATE!");
     } else if (whiteCheckmated) {
       this.setState({
         gameOver: true,
       });
+      this.props.gameOverMethod(true);
       alert("BLACK WON BY CHECKMATE!");
     }
   };
@@ -262,58 +218,70 @@ class ChessGame extends React.Component {
         */
     // console.log(this.state.gameState.getBoard())
 
-    return this.state.gameOver ? (
-      <NFTPage
-        moves={this.state.moves}
-        gameId={this.props.gameId}
-        color={this.props.color}
-      />
-    ) : (
-      <React.Fragment>
-        <div
-          style={{
-            backgroundImage: `url(${Board})`,
-            width: "720px",
-            height: "720px",
-          }}
-        >
-          <Stage width={720} height={720}>
-            <Layer>
-              {this.state.gameState.getBoard().map((row) => {
-                return (
-                  <React.Fragment>
-                    {row.map((square) => {
-                      if (square.isOccupied()) {
-                        return (
-                          <Piece
-                            x={square.getCanvasCoord()[0]}
-                            y={square.getCanvasCoord()[1]}
-                            imgurls={piecemap[square.getPiece().name]}
-                            isWhite={square.getPiece().color === "white"}
-                            draggedPieceTargetId={
-                              this.state.draggedPieceTargetId
-                            }
-                            onDragStart={this.startDragging}
-                            onDragEnd={this.endDragging}
-                            id={square.getPieceIdOnThisSquare()}
-                            thisPlayersColorIsWhite={this.props.color}
-                            playerTurnToMoveIsWhite={
-                              this.state.playerTurnToMoveIsWhite
-                            }
-                            whiteKingInCheck={this.state.whiteKingInCheck}
-                            blackKingInCheck={this.state.blackKingInCheck}
-                          />
-                        );
-                      }
-                      return;
-                    })}
-                  </React.Fragment>
-                );
-              })}
-            </Layer>
-          </Stage>
-        </div>
-      </React.Fragment>
+    return (
+      <Box>
+        <Grid item xs={6} md={6}>
+          <React.Fragment>
+            <div
+              style={{
+                backgroundImage: `url(${Board})`,
+                width: "720px",
+                height: "720px",
+              }}
+            >
+              <Stage width={720} height={720}>
+                <Layer>
+                  {this.state.gameState.getBoard().map((row) => {
+                    return (
+                      <React.Fragment>
+                        {row.map((square) => {
+                          if (square.isOccupied()) {
+                            return (
+                              <Piece
+                                x={square.getCanvasCoord()[0]}
+                                y={square.getCanvasCoord()[1]}
+                                imgurls={piecemap[square.getPiece().name]}
+                                isWhite={square.getPiece().color === "white"}
+                                draggedPieceTargetId={
+                                  this.state.draggedPieceTargetId
+                                }
+                                onDragStart={this.startDragging}
+                                onDragEnd={this.endDragging}
+                                id={square.getPieceIdOnThisSquare()}
+                                thisPlayersColorIsWhite={this.props.color}
+                                playerTurnToMoveIsWhite={
+                                  this.state.playerTurnToMoveIsWhite
+                                }
+                                whiteKingInCheck={this.state.whiteKingInCheck}
+                                blackKingInCheck={this.state.blackKingInCheck}
+                              />
+                            );
+                          }
+                          return;
+                        })}
+                      </React.Fragment>
+                    );
+                  })}
+                </Layer>
+              </Stage>
+            </div>
+          </React.Fragment>
+        </Grid>
+        <Grid>
+          <SimpleCountdownTimer
+            time={this.props.time * 60}
+            playerTurnToMoveIsWhite={this.state.playerTurnToMoveIsWhite}
+            paused = {!this.state.playerTurnToMoveIsWhite}
+            gameOverMethod = {this.props.gameOverMethod}
+          />
+          <SimpleCountdownTimer
+            time={this.props.time * 60}
+            playerTurnToMoveIsWhite={this.state.playerTurnToMoveIsWhite}
+            paused = {this.state.playerTurnToMoveIsWhite}
+            gameOverMethod = {this.props.gameOverMethod}
+          />
+        </Grid>
+      </Box>
     );
   }
 }
@@ -340,6 +308,7 @@ const ChessGameWrapper = (props) => {
   const [opponentUserName, setOpponentUserName] = React.useState("");
   const [confirmStakes, confirmedStakes] = React.useState(false);
   const [gameSessionDoesNotExist, doesntExist] = React.useState(false);
+  const [gameOver, gameOverMethod] = React.useState(false);
 
   React.useEffect(() => {
     socket.on("playerJoinedRoom", (statusUpdate) => {
@@ -416,43 +385,49 @@ const ChessGameWrapper = (props) => {
     });
   }, []);
 
-  return (
+  return gameOver ? (
+    <NFTPage
+      moves={this.state.moves}
+      gameId={this.props.gameId}
+      color={this.props.color}
+    />
+  ) : (
     <React.Fragment>
       {opponentDidJoinTheGame ? (
-        <Grid>
-          <Box m={2} p={3}>
-          <Grid item xs={6} md={8}>
+        <Box mt={2} pt={3} ml={2}>
+          <Grid ml={2}>
             <ChessGame
+              gameOverMethod={gameOverMethod}
               playAudio={play}
               gameId={gameid}
               color={color.didRedirect}
-              time={30}
+              time={Number(time)}
             />
           </Grid>
-          </Box>
-          <Grid item xs={6} md={4}>
-            <div>
-              <h4 style={{ textAlign: "center", marginTop: "20px" }}>
-                {" "}
-                Time {time}
-              </h4>
-              <h4 style={{ textAlign: "center", marginTop: "20px" }}>
-                {" "}
-                Opponent: {opponentUserName}
-              </h4>
-              <h4 style={{ textAlign: "center", marginTop: "20px" }}>
-                {" "}
-                Stake: {opponentStake}{" "}
-              </h4>
-              <div className="header__navbar" style={{ display: "flex" }}></div>
-              <h4>
-                {" "}
-                You: {props.myUserName} Stake{props.stake}{" "}
-              </h4>
-            </div>
-          </Grid>
-        </Grid>
-      ) : gameSessionDoesNotExist ? (
+        </Box>
+      ) : // <Grid>
+
+      //   <Grid item xs={6} md={6}>
+      //     {/* <h4 style={{ textAlign: "center", marginTop: "20px" }}>
+      //         {" "}
+      //         Time {time}
+      //       </h4>
+      //       <h4 style={{ textAlign: "center", marginTop: "20px" }}>
+      //         {" "}
+      //         Opponent: {opponentUserName}
+      //       </h4>
+      //       <h4 style={{ textAlign: "center", marginTop: "20px" }}>
+      //         {" "}
+      //         Stake: {opponentStake}{" "}
+      //       </h4>
+      //       <div className="header__navbar" style={{ display: "flex" }}></div>
+      //       <h4>
+      //         {" "}
+      //         You: {props.myUserName} Stake{props.stake}{" "}
+      //       </h4> */}
+      //   </Grid>
+      // </Grid>
+      gameSessionDoesNotExist ? (
         <div>
           <h1 style={{ textAlign: "center", marginTop: "200px" }}>
             {" "}

@@ -11,6 +11,11 @@ function Header() {
     window.open("/", "_self");
   }
 
+  function goToProfile() {
+    window.open("/wallet", "_self");
+  }
+
+
   return (
     <div className="header__navbar">
       <div
@@ -51,7 +56,7 @@ function Header() {
             MARKETPLACE
           </Typography>
         </li>
-        <li id="signin" className="navbar__item">
+        <li id="signin" className="navbar__item" onClick={goToProfile}>
           <Typography component="h5" variant="h9" fontFamily="sans-serif">
             SIGN IN
           </Typography>

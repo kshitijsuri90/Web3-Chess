@@ -8,6 +8,7 @@ import ChessGame from './chess/ui/chessgame';
 import Home from './containers/Home';
 import Challenge from './containers/Challenges';
 import firebase from "firebase";
+import WalletProfile from './containers/WalletProfile';
 /*
  *  Frontend flow: 
  * 
@@ -70,6 +71,10 @@ function App() {
               setUserName={setUserName}
               setTime={setTime}
               setStake={setStake}
+            />
+          </Route>
+          <Route path="/wallet" exact>
+            <WalletProfile
             />
           </Route>
           <Route path="/challenges" exact>

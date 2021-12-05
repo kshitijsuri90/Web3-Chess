@@ -7,14 +7,16 @@ import Square from "./square";
  */
 
 class Game {
-
-  constructor(thisPlayersColorIsWhite) {
+  constructor(thisPlayersColorIsWhite, newGame = true, chessBoard = []) {
     this.thisPlayersColorIsWhite = thisPlayersColorIsWhite; // once initialized, this value should never change.
-    console.log(this.thisPlayersColorIsWhite?"White" :"Black");
+    console.log(this.thisPlayersColorIsWhite ? "White" : "Black");
     // console.log("this player's color is white: " + this.thisPlayersColorIsWhite)
-    this.chessBoard = this.makeStartingBoard(); // the actual chessBoard
+    this.chessBoard = newGame
+      ? this.makeStartingBoard()
+      : this.makeBoard(chessBoard); // the actual chessBoard
     this.chess = new Chess();
     this.moves = [];
+    this.index = -1;
 
     this.toCoord = thisPlayersColorIsWhite
       ? {
@@ -119,10 +121,10 @@ class Game {
     this.chessBoard = newBoard;
   }
 
-  undoMove(pieceId, to, isMyMove){
-      console.log(to);
-      console.log(isMyMove);
-      const to2D = isMyMove
+  undoMove(pieceId, to, isMyMove) {
+    console.log(to);
+    console.log(isMyMove);
+    const to2D = isMyMove
       ? {
           105: 0,
           195: 1,
@@ -152,8 +154,9 @@ class Game {
       return;
     }
 
-    var obj = this.moves.pop();
+    var obj = this.moves[this.index];
     console.log(obj);
+    this.index--;
     const y = obj.to_y;
     const x = obj.to_x;
 
@@ -294,7 +297,8 @@ class Game {
     console.log(x + " " + y);
     console.log(this.toChessMove([x, y], to2D));
     console.log("to " + to_x + " " + to_y);
-    this.moves.push({x: x, y: y, to_x: to_x, to_y: to_y});
+    this.moves.push({ x: x, y: y, to_x: to_x, to_y: to_y });
+    this.index++;
     console.log(this.toChessMove(to, to2D));
     console.log(pieceId[1]);
     const moveAttempt = !isPromotion
@@ -475,8 +479,8 @@ class Game {
     }
   }
 
-  makeBoard(boardArray){
-      
+  makeBoard(boardArray) {
+    this.chessBoard = boardArray;
   }
 
   makeStartingBoard() {

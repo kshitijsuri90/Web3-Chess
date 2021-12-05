@@ -11,6 +11,15 @@ function Header() {
     window.open("/", "_self");
   }
 
+  function goToProfile() {
+    window.open("/wallet", "_self");
+  }
+
+  function goToPuzzles() {
+    window.open("/puzzles", "_self");
+  }
+
+
   return (
     <div className="header__navbar">
       <div
@@ -41,7 +50,7 @@ function Header() {
             BOUNTIES
           </Typography>
         </li>
-        <li id="features" className="navbar__item">
+        <li id="features" className="navbar__item" onClick={goToPuzzles}>
           <Typography component="h5" variant="h9" fontFamily="sans-serif">
             PUZZLES
           </Typography>
@@ -51,7 +60,7 @@ function Header() {
             MARKETPLACE
           </Typography>
         </li>
-        <li id="signin" className="navbar__item">
+        <li id="signin" className="navbar__item" onClick={goToProfile}>
           <Typography component="h5" variant="h9" fontFamily="sans-serif">
             SIGN IN
           </Typography>

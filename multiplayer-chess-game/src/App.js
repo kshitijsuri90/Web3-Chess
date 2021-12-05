@@ -8,6 +8,8 @@ import ChessGame from './chess/ui/chessgame';
 import Home from './containers/Home';
 import Challenge from './containers/Challenges';
 import firebase from "firebase";
+import WalletProfile from './containers/WalletProfile';
+import PuzzlePage from "./containers/PuzzlesPage";
 /*
  *  Frontend flow: 
  * 
@@ -71,6 +73,13 @@ function App() {
               setTime={setTime}
               setStake={setStake}
             />
+          </Route>
+          <Route path="/wallet" exact>
+            <WalletProfile
+            />
+          </Route>
+          <Route path="/puzzles" exact>
+            <PuzzlePage/>
           </Route>
           <Route path="/challenges" exact>
             <Challenge />

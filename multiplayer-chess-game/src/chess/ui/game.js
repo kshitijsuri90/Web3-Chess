@@ -6,6 +6,13 @@ import Board from "../assets/chessBoard.png";
 import Piece from "./piece";
 import piecemap from "./piecemap";
 import Puzzle from "./play_puzzle";
+import Box from "@mui/material/Box";
+import Grid from "@mui/material/Grid";
+import Paper from "@mui/material/Paper";
+import Typography from "@mui/material/Typography";
+import SimpleCountdownTimer from "../../components/Timer";
+import Divider from "@mui/material/Divider";
+import Button from "../../components/Button";
 
 class ChessGame extends React.Component {
   state = {
@@ -23,6 +30,7 @@ class ChessGame extends React.Component {
     initialNFTGameState: new Game(this.props.color),
     firstMoveInNFt: this.props.color,
     submitNFT: false,
+    firstMove: true,
   };
 
   componentDidMount() {
@@ -50,30 +58,6 @@ class ChessGame extends React.Component {
       ? currentGame.undoMove(selectedId, finalPosition, isMyMove)
       : currentGame.movePiece(selectedId, finalPosition, isMyMove);
     console.log(update);
-    if (update === "moved in the same position.") {
-      return;
-    } else if (update === "user tried to capture their own piece") {
-      return;
-    } else if (update === "b is in check" || update === "w is in check") {
-      // change the fill of the enemy king or your king based on which side is in check.
-      // play a sound or something
-      if (update[0] === "b") {
-        blackKingInCheck = true;
-      } else {
-        whiteKingInCheck = true;
-      }
-    } else if (
-      update === "b has been checkmated" ||
-      update === "w has been checkmated"
-    ) {
-      if (update[0] === "b") {
-        blackCheckmated = true;
-      } else {
-        whiteCheckmated = true;
-      }
-    } else if (update === "invalid move") {
-      return;
-    }
 
     this.props.playAudio();
     var ismove = this.state.isMyMove;
@@ -170,6 +154,10 @@ class ChessGame extends React.Component {
 
   makeNextMove = () => {
     var index = this.state.gameIndex;
+    if (index + 1 >= this.state.moves.length) {
+      console.log("End of moves");
+      return;
+    }
     this.setState({
       gameIndex: index + 1,
     });
@@ -187,11 +175,16 @@ class ChessGame extends React.Component {
 
   goToPreviousMove = () => {
     var index = this.state.gameIndex;
+    if (index - 1 < 0) {
+      console.log("End of moves");
+      return;
+    }
     var move = this.state.isMyMove;
     this.setState({
       gameIndex: index - 1,
       isMyMove: !move,
     });
+
     console.log(index);
     console.log(this.state.isMyMove);
     this.movePiece(
@@ -218,6 +211,7 @@ class ChessGame extends React.Component {
     console.log("Setting start NFT stage to " + index);
     this.setState({
       startIndexOfNFT: index,
+      firstMove: this.state.playerTurnToMoveIsWhite,
       initialNFTGameState: this.state.gameState,
     });
   };
@@ -239,68 +233,113 @@ class ChessGame extends React.Component {
     // console.log(this.state.gameState.getBoard())
     return this.state.submitNFT ? (
       <Puzzle
+        firstMove={this.state.firstMove}
         moves={this.state.moves.slice(
-          this.state.startIndexOfNFT,
+          this.state.startIndexOfNFT === 0? 0:this.state.startIndexOfNFT - 1,
           this.state.endIndexOFNFT + 1
         )}
         gameState={this.state.initialNFTGameState}
       />
     ) : (
-      <div className="Home">
-        <button onClick={this.makeNextMove}>Next</button>
-        <button onClick={this.goToPreviousMove}>Previous</button>
-        <button onClick={this.submit}>Submit</button>
-        <button onClick={this.makeStart}>NFTStart</button>
-        <button onClick={this.makeEnd}>NFTEnd</button>
-        <h1>Start move : {this.state.startIndexOfNFT} </h1>
-        <h1>End move: {this.state.endIndexOFNFT} </h1>
-        <React.Fragment>
-          <div
-            style={{
-              backgroundImage: `url(${Board})`,
-              width: "720px",
-              height: "720px",
+      <Box
+        sx={{
+          width: "100vw",
+          height: "100vh",
+          display: "flex",
+          marginTop: "50px",
+          justifyContent: "center",
+        }}
+      >
+        <Grid item xs={5} md={6}>
+          <React.Fragment>
+            <div
+              style={{
+                backgroundImage: `url(${Board})`,
+                width: "720px",
+                height: "720px",
+              }}
+            >
+              <Stage width={720} height={720}>
+                <Layer>
+                  {this.state.gameState.getBoard().map((row) => {
+                    return (
+                      <React.Fragment>
+                        {row.map((square) => {
+                          if (square.isOccupied()) {
+                            return (
+                              <Piece
+                                x={square.getCanvasCoord()[0]}
+                                y={square.getCanvasCoord()[1]}
+                                imgurls={piecemap[square.getPiece().name]}
+                                isWhite={square.getPiece().color === "white"}
+                                draggedPieceTargetId={
+                                  this.state.draggedPieceTargetId
+                                }
+                                onDragStart={this.startDragging}
+                                onDragEnd={this.endDragging}
+                                id={square.getPieceIdOnThisSquare()}
+                                thisPlayersColorIsWhite={this.props.color}
+                                playerTurnToMoveIsWhite={
+                                  this.state.playerTurnToMoveIsWhite
+                                }
+                                whiteKingInCheck={this.state.whiteKingInCheck}
+                                blackKingInCheck={this.state.blackKingInCheck}
+                                boardInteractive={false}
+                              />
+                            );
+                          }
+                          return;
+                        })}
+                      </React.Fragment>
+                    );
+                  })}
+                </Layer>
+              </Stage>
+            </div>
+          </React.Fragment>
+        </Grid>
+        <Grid
+          item
+          xs={5}
+          ml={4}
+          sx={{
+            borderColor: "text.primary",
+            m: 1,
+            borderColor: "secondary.main",
+            border: 1,
+            width: "30vw",
+            height: "80vh",
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: "center",
+          }}
+        >
+          <Box
+            sx={{
+              padding: "20px",
+              display: "flex",
+              flexDirection: "row",
+              justifyContent: "center",
             }}
           >
-            <Stage width={720} height={720}>
-              <Layer>
-                {this.state.gameState.getBoard().map((row) => {
-                  return (
-                    <React.Fragment>
-                      {row.map((square) => {
-                        if (square.isOccupied()) {
-                          return (
-                            <Piece
-                              x={square.getCanvasCoord()[0]}
-                              y={square.getCanvasCoord()[1]}
-                              imgurls={piecemap[square.getPiece().name]}
-                              isWhite={square.getPiece().color === "white"}
-                              draggedPieceTargetId={
-                                this.state.draggedPieceTargetId
-                              }
-                              onDragStart={this.startDragging}
-                              onDragEnd={this.endDragging}
-                              id={square.getPieceIdOnThisSquare()}
-                              thisPlayersColorIsWhite={this.props.color}
-                              playerTurnToMoveIsWhite={
-                                this.state.playerTurnToMoveIsWhite
-                              }
-                              whiteKingInCheck={this.state.whiteKingInCheck}
-                              blackKingInCheck={this.state.blackKingInCheck}
-                              boardInteractive={false}
-                            />
-                          );
-                        }
-                        return;
-                      })}
-                    </React.Fragment>
-                  );
-                })}
-              </Layer>
-            </Stage>
-          </div>
-        </React.Fragment>
-      </div>
+            <Button text="Previous" onClick={this.goToPreviousMove} />
+            <Button text="Next" onClick={this.makeNextMove} />
+          </Box>
+
+          <Box
+            sx={{
+              padding: "20px",
+              display: "flex",
+              flexDirection: "column",
+              justifyContent: "center",
+            }}
+          >
+            <Button text="Start NFT" onClick={this.makeStart} />
+            <Button text="End NFT" onClick={this.makeEnd} />
+            <Button text="Submit" onClick={this.submit} />
+          </Box>
+        </Grid>
+      </Box>
     );
   }
 }

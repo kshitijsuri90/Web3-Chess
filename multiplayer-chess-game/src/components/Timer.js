@@ -6,7 +6,7 @@ class SimpleCountdownTimer extends React.Component {
     super(props);
     console.log(props);
     this.state = {
-      count: props.time,
+      count: 30,
       playerTurnToMoveIsWhite: props.playerTurnToMoveIsWhite,
       paused: false,
       seconds: "00",

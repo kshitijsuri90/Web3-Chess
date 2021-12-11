@@ -172,7 +172,7 @@ class ChessGame extends React.Component {
   revertToPreviousState = (selectedId) => {
     const oldGS = this.state.gameState;
     const oldBoard = oldGS.getBoard();
-    const tmpGS = new Game(true);
+    const tmpGS = new Game(this.state.myColour);
     const tmpBoard = [];
 
     for (var i = 0; i < 8; i++) {

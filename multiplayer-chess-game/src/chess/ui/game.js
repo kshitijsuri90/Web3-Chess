@@ -1,6 +1,5 @@
 import React from "react";
 import Game from "../model/chess";
-import Square from "../model/square";
 import { Stage, Layer } from "react-konva";
 import Board from "../assets/chessBoard.png";
 import Piece from "./piece";
@@ -13,7 +12,12 @@ import Typography from "@mui/material/Typography";
 import SimpleCountdownTimer from "../../components/Timer";
 import Divider from "@mui/material/Divider";
 import Button from "../../components/Button";
+import Cookies from "universal-cookie";
+import ChessPiece from "../model/chesspiece";
+import Square from "../model/square";
 
+const cookies = new Cookies();
+console.log("Cookie");
 class ChessGame extends React.Component {
   state = {
     gameState: new Game(this.props.color),
@@ -27,7 +31,7 @@ class ChessGame extends React.Component {
     endIndexOFNFT: 0,
     gameIndex: -1,
     isMyMove: this.props.color ? true : false,
-    initialNFTGameState: new Game(this.props.color),
+    initialNFTGameState: null,
     firstMoveInNFt: this.props.color,
     submitNFT: false,
     firstMove: true,
@@ -93,39 +97,6 @@ class ChessGame extends React.Component {
     );
     const selectedId = this.state.draggedPieceTargetId;
     this.movePiece(selectedId, finalPosition, currentGame, true);
-  };
-
-  revertToPreviousState = (selectedId) => {
-    /**
-     * Should update the UI to what the board looked like before.
-     */
-    const oldGS = this.state.gameState;
-    const oldBoard = oldGS.getBoard();
-    const tmpGS = new Game(true);
-    const tmpBoard = [];
-
-    for (var i = 0; i < 8; i++) {
-      tmpBoard.push([]);
-      for (var j = 0; j < 8; j++) {
-        if (oldBoard[i][j].getPieceIdOnThisSquare() === selectedId) {
-          tmpBoard[i].push(new Square(j, i, null, oldBoard[i][j].canvasCoord));
-        } else {
-          tmpBoard[i].push(oldBoard[i][j]);
-        }
-      }
-    }
-
-    // temporarily remove the piece that was just moved
-    tmpGS.setBoard(tmpBoard);
-
-    this.setState({
-      gameState: tmpGS,
-      draggedPieceTargetId: "",
-    });
-
-    this.setState({
-      gameState: oldGS,
-    });
   };
 
   inferCoord = (x, y, chessBoard) => {
@@ -197,7 +168,14 @@ class ChessGame extends React.Component {
   };
 
   submit = () => {
-    console.log(this.state.moves);
+    var slicedMoves = this.state.moves.slice(
+      this.state.startIndexOfNFT + 1,
+      this.state.endIndexOFNFT + 1
+    );
+    console.log(slicedMoves);
+    this.setState({
+      moves: slicedMoves,
+    });
     console.log(this.state.startIndexOfNFT);
     console.log(this.state.endIndexOFNFT);
     console.log(this.state.initialNFTGameState);
@@ -207,12 +185,46 @@ class ChessGame extends React.Component {
   };
 
   makeStart = () => {
+
+    if(!this.state.isMyMove){
+      alert("You can only mint NFT's of your moves");
+      return;
+    }
+
     var index = this.state.gameIndex;
     console.log("Setting start NFT stage to " + index);
+    var thisgame = new Game(this.props.color);
+    var board = this.state.gameState.chessBoard;
+    var startingChessBoard = [];
+    for (var i = 0; i < 8; i++) {
+      startingChessBoard.push([]);
+      for (var j = 0; j < 8; j++) {
+        // j is horizontal
+        // i is vertical
+        const coordinatesOnCanvas = [(j + 1) * 90 + 15, (i + 1) * 90 + 15];
+        const emptySquare = new Square(j, i, null, coordinatesOnCanvas);
+        startingChessBoard[i].push(emptySquare);
+      }
+    }
+    for (var j = 0; j < 8; j++) {
+      for (var i = 0; i < 8; i++) {
+        var piece = board[j][i].getPiece();
+        //console.log(piece);
+        if (piece == null) continue;
+        startingChessBoard[j][i].setPiece(
+          new ChessPiece(piece.name, piece.isAttacked, piece.color, piece.id)
+        );
+      }
+    }
+    console.log(board);
+    console.log(startingChessBoard);
+    thisgame.chessBoard = startingChessBoard;
+    console.log(thisgame.chessBoard);
+    var turn = this.state.playerTurnToMoveIsWhite;
     this.setState({
       startIndexOfNFT: index,
-      firstMove: this.state.playerTurnToMoveIsWhite,
-      initialNFTGameState: this.state.gameState,
+      firstMove: turn,
+      initialNFTGameState: thisgame,
     });
   };
 
@@ -234,10 +246,7 @@ class ChessGame extends React.Component {
     return this.state.submitNFT ? (
       <Puzzle
         firstMove={this.state.firstMove}
-        moves={this.state.moves.slice(
-          this.state.startIndexOfNFT === 0? 0:this.state.startIndexOfNFT - 1,
-          this.state.endIndexOFNFT + 1
-        )}
+        moves={this.state.moves}
         gameState={this.state.initialNFTGameState}
       />
     ) : (
@@ -307,7 +316,7 @@ class ChessGame extends React.Component {
             m: 1,
             borderColor: "secondary.main",
             border: 1,
-            width: "30vw",
+            width: "20vw",
             height: "80vh",
             display: "flex",
             flexDirection: "column",

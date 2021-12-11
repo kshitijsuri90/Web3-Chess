@@ -17,48 +17,50 @@ class Puzzle extends React.Component {
   state = {
     gameState: this.props.gameState,
     draggedPieceTargetId: "", // empty string means no piece is being dragged
-    playerTurnToMoveIsWhite: this.props.firstMove,
+    playerTurnToMoveIsWhite: this.props.gameState.thisPlayersColorIsWhite,
     whiteKingInCheck: false,
     blackKingInCheck: false,
     moves: this.props.moves,
     gameOver: false,
-    startIndexOfNFT: 0,
-    endIndexOFNFT: 0,
     gameIndex: 0,
-    isMyMove: this.props.color ? true : false,
-    firstMove: this.props.firstMove,
-    submitNFT: false,
+    messageID: 0,
   };
 
   componentDidMount() {
-    console.log(this.props);
-    console.log(this.state);
+    // console.log(this.props);
+    // console.log(this.state);
+    var gameState = this.state.gameState;
+    gameState.moves = this.props.moves;
     this.setState({
-      moves: this.props.moves,
+      gameState: gameState,
     });
-    this.executeFirstMove();
+    console.log(this.state);
   }
 
   startDragging = (e) => {
+    console.log("startDragging");
     this.setState({
       draggedPieceTargetId: e.target.attrs.id,
     });
   };
 
-  executeFirstMove(){
-    this.movePiece(this.state.moves.selectedId, this.state.moves.finalPosition, this.state.gameState, );
-  }
-
-  movePiece = (selectedId, finalPosition, currentGame, isMyMove, isUndo) => {
+  movePiece = (selectedId, finalPosition, currentGame, isMyMove) => {
     var whiteKingInCheck = false;
     var blackKingInCheck = false;
     var blackCheckmated = false;
     var whiteCheckmated = false;
 
     console.log("Move made: " + selectedId + " " + finalPosition);
-    const update = isUndo
-      ? currentGame.undoMove(selectedId, finalPosition, isMyMove)
-      : currentGame.movePiece(selectedId, finalPosition, isMyMove);
+    var index = this.state.gameIndex;
+    if (index > this.state.moves.length) {
+      console.log("out of bounds");
+      return;
+    }
+    var nextID = this.state.moves[index].selectedId;
+    var nextPos = this.state.moves[index].finalPosition;
+    console.log(nextID + " " + selectedId);
+    console.log(nextPos + " " + finalPosition);
+    const update = currentGame.movePiece(selectedId, finalPosition, isMyMove);
     console.log(update);
     if (update === "moved in the same position.") {
       return;
@@ -82,18 +84,83 @@ class Puzzle extends React.Component {
         whiteCheckmated = true;
       }
     } else if (update === "invalid move") {
+      this.revertToPreviousState(selectedId);
       return;
     }
 
-    this.props.playAudio();
-    var ismove = this.state.isMyMove;
+    var index = this.state.gameIndex;
+    var playerMove = this.state.playerTurnToMoveIsWhite;
     this.setState({
       draggedPieceTargetId: "",
       gameState: currentGame,
-      playerTurnToMoveIsWhite: !this.props.color,
+      playerTurnToMoveIsWhite: !playerMove,
       whiteKingInCheck: whiteKingInCheck,
       blackKingInCheck: blackKingInCheck,
-      isMyMove: isUndo ? ismove : !ismove,
+      gameIndex: index + 1,
+      messageID: 2,
+    });
+
+    if (blackCheckmated) {
+      this.setState({
+        gameOver: true,
+      });
+      alert("WHITE WON BY CHECKMATE!");
+    } else if (whiteCheckmated) {
+      this.setState({
+        gameOver: true,
+      });
+      alert("BLACK WON BY CHECKMATE!");
+    }
+
+    //Do opponent move
+    if (index + 1 >= this.state.moves.length) {
+      console.log("Puzzle Over");
+      return;
+    }
+    selectedId = this.state.moves[index + 1].selectedId;
+    finalPosition = this.state.moves[index + 1].finalPosition;
+    console.log("Move made: " + selectedId + " " + finalPosition);
+    const update1 = currentGame.movePiece(
+      selectedId,
+      finalPosition,
+      false
+    );
+    console.log(update1);
+    if (update1 === "moved in the same position.") {
+      return;
+    } else if (update1 === "user tried to capture their own piece") {
+      return;
+    } else if (update1 === "b is in check" || update === "w is in check") {
+      // change the fill of the enemy king or your king based on which side is in check.
+      // play a sound or something
+      if (update1[0] === "b") {
+        blackKingInCheck = true;
+      } else {
+        whiteKingInCheck = true;
+      }
+    } else if (
+      update1 === "b has been checkmated" ||
+      update1 === "w has been checkmated"
+    ) {
+      if (update1[0] === "b") {
+        blackCheckmated = true;
+      } else {
+        whiteCheckmated = true;
+      }
+    } else if (update1 === "invalid move") {
+      this.revertToPreviousState(selectedId);
+      return;
+    }
+
+    var index = this.state.gameIndex;
+
+    this.setState({
+      draggedPieceTargetId: "",
+      gameState: currentGame,
+      playerTurnToMoveIsWhite: playerMove,
+      whiteKingInCheck: whiteKingInCheck,
+      blackKingInCheck: blackKingInCheck,
+      gameIndex: index + 1,
     });
 
     if (blackCheckmated) {
@@ -110,6 +177,7 @@ class Puzzle extends React.Component {
   };
 
   endDragging = (e) => {
+    console.log("endDragging");
     const currentGame = this.state.gameState;
     const currentBoard = currentGame.getBoard();
     const finalPosition = this.inferCoord(
@@ -118,7 +186,12 @@ class Puzzle extends React.Component {
       currentBoard
     );
     const selectedId = this.state.draggedPieceTargetId;
-    this.movePiece(selectedId, finalPosition, currentGame, true);
+    this.movePiece(
+      selectedId,
+      finalPosition,
+      currentGame,
+      true
+    );
   };
 
   revertToPreviousState = (selectedId) => {
@@ -127,7 +200,7 @@ class Puzzle extends React.Component {
      */
     const oldGS = this.state.gameState;
     const oldBoard = oldGS.getBoard();
-    const tmpGS = new Game(true);
+    const tmpGS = new Game(this.props.gameState.thisPlayersColorIsWhite);
     const tmpBoard = [];
 
     for (var i = 0; i < 8; i++) {
@@ -179,12 +252,6 @@ class Puzzle extends React.Component {
   };
 
   render() {
-    // console.log(this.state.gameState.getBoard())
-    //  console.log("it's white's move this time: " + this.state.playerTurnToMoveIsWhite)
-    /*
-            Look at the current game state in the model and populate the UI accordingly
-        */
-    // console.log(this.state.gameState.getBoard())
     return (
       <Box
         sx={{
@@ -223,7 +290,9 @@ class Puzzle extends React.Component {
                                 onDragStart={this.startDragging}
                                 onDragEnd={this.endDragging}
                                 id={square.getPieceIdOnThisSquare()}
-                                thisPlayersColorIsWhite={this.props.color}
+                                thisPlayersColorIsWhite={
+                                  this.props.gameState.thisPlayersColorIsWhite
+                                }
                                 playerTurnToMoveIsWhite={
                                   this.state.playerTurnToMoveIsWhite
                                 }
@@ -251,24 +320,13 @@ class Puzzle extends React.Component {
             m: 1,
             borderColor: "secondary.main",
             border: 1,
-            width: "30vw",
+            width: "20vw",
             height: "80vh",
             display: "flex",
             flexDirection: "column",
             justifyContent: "center",
           }}
         >
-          <Typography
-            align="center"
-            component="h4"
-            variant="h4"
-            fontSize="28px"
-            mt={2}
-            md={2}
-            fontFamily="serif"
-          >
-            Valid Move!
-          </Typography>
           <Typography
             align="center"
             component="h4"

@@ -18,6 +18,7 @@ import Square from "../model/square";
 
 const cookies = new Cookies();
 console.log("Cookie");
+
 class ChessGame extends React.Component {
   state = {
     gameState: new Game(this.props.color),
@@ -184,42 +185,65 @@ class ChessGame extends React.Component {
     });
   };
 
-  makeStart = () => {
+  toChessMove(finalPosition, to2D) {
+    let move;
 
-    if(!this.state.isMyMove){
+    if (finalPosition[0] > 100) {
+      move =
+        this.toAlphabet[to2D[finalPosition[0]]] +
+        this.toCoord[to2D[finalPosition[1]]];
+    } else {
+      move = this.toAlphabet[finalPosition[0]] + this.toCoord[finalPosition[1]];
+    }
+
+    console.log("proposed move: " + move)
+    return move;
+  }
+
+  makeStart = () => {
+    if (!this.state.isMyMove) {
       alert("You can only mint NFT's of your moves");
       return;
     }
-
     var index = this.state.gameIndex;
     console.log("Setting start NFT stage to " + index);
     var thisgame = new Game(this.props.color);
-    var board = this.state.gameState.chessBoard;
-    var startingChessBoard = [];
-    for (var i = 0; i < 8; i++) {
-      startingChessBoard.push([]);
-      for (var j = 0; j < 8; j++) {
-        // j is horizontal
-        // i is vertical
-        const coordinatesOnCanvas = [(j + 1) * 90 + 15, (i + 1) * 90 + 15];
-        const emptySquare = new Square(j, i, null, coordinatesOnCanvas);
-        startingChessBoard[i].push(emptySquare);
-      }
+    var moves = this.state.moves;
+    var isMyMove = true;
+    for (let i = 0; i <= this.state.gameIndex; i++) {
+      console.log("Inside loop")
+      const update = thisgame.movePiece(
+        this.state.moves[i].selectedId,
+        this.state.moves[i].finalPosition,
+        isMyMove
+      );
+      console.log(update);
+      isMyMove = !isMyMove;
     }
-    for (var j = 0; j < 8; j++) {
-      for (var i = 0; i < 8; i++) {
-        var piece = board[j][i].getPiece();
-        //console.log(piece);
-        if (piece == null) continue;
-        startingChessBoard[j][i].setPiece(
-          new ChessPiece(piece.name, piece.isAttacked, piece.color, piece.id)
-        );
-      }
-    }
-    console.log(board);
-    console.log(startingChessBoard);
-    thisgame.chessBoard = startingChessBoard;
-    console.log(thisgame.chessBoard);
+    // var board = this.state.gameState.chessBoard;
+    // var startingChessBoard = [];
+    // for (var i = 0; i < 8; i++) {
+    //   startingChessBoard.push([]);
+    //   for (var j = 0; j < 8; j++) {
+    //     // j is horizontal
+    //     // i is vertical
+    //     const coordinatesOnCanvas = [(j + 1) * 90 + 15, (i + 1) * 90 + 15];
+    //     const emptySquare = new Square(j, i, null, coordinatesOnCanvas);
+    //     startingChessBoard[i].push(emptySquare);
+    //   }
+    // }
+    // for (var j = 0; j < 8; j++) {
+    //   for (var i = 0; i < 8; i++) {
+    //     var piece = board[j][i].getPiece();
+    //     //console.log(piece);
+    //     if (piece == null) continue;
+    //     startingChessBoard[j][i].setPiece(
+    //       new ChessPiece(piece.name, piece.isAttacked, piece.color, piece.id)
+    //     );
+    //   }
+    // }
+    // thisgame.chessBoard = startingChessBoard;
+    // console.log(startingChessBoard);
     var turn = this.state.playerTurnToMoveIsWhite;
     this.setState({
       startIndexOfNFT: index,

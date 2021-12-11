@@ -23,7 +23,7 @@ class Puzzle extends React.Component {
     moves: this.props.moves,
     gameOver: false,
     gameIndex: 0,
-    messageID: 0,
+    messageID: "Start Puzzle!",
   };
 
   componentDidMount() {
@@ -49,7 +49,7 @@ class Puzzle extends React.Component {
     var blackKingInCheck = false;
     var blackCheckmated = false;
     var whiteCheckmated = false;
-
+    console.log(this.state.gameState);
     console.log("Move made: " + selectedId + " " + finalPosition);
     var index = this.state.gameIndex;
     if (index > this.state.moves.length) {
@@ -59,7 +59,21 @@ class Puzzle extends React.Component {
     var nextID = this.state.moves[index].selectedId;
     var nextPos = this.state.moves[index].finalPosition;
     console.log(nextID + " " + selectedId);
+    if(nextID != selectedId){
+      this.revertToPreviousState(selectedId);
+      this.setState({
+        messageID: "Not the best move"
+      });
+      return;
+    }
     console.log(nextPos + " " + finalPosition);
+    if (JSON.stringify(nextPos) != JSON.stringify(finalPosition)) {
+      this.revertToPreviousState(selectedId);
+      this.setState({
+        messageID: "Not the best move",
+      });
+      return;
+    }
     const update = currentGame.movePiece(selectedId, finalPosition, isMyMove);
     console.log(update);
     if (update === "moved in the same position.") {
@@ -97,19 +111,29 @@ class Puzzle extends React.Component {
       whiteKingInCheck: whiteKingInCheck,
       blackKingInCheck: blackKingInCheck,
       gameIndex: index + 1,
-      messageID: 2,
+      messageID: "Woah, Keep going!",
     });
 
+    if(index + 1 == this.state.moves.length){
+      alert("Hurray you won!");
+      this.setState({
+        gameOver: true,
+        messageID: "Congratulations! You have successfully completed this puzzle!",
+      });
+      return;
+    }
     if (blackCheckmated) {
       this.setState({
         gameOver: true,
+        messageID: "Hurray you won!",
       });
-      alert("WHITE WON BY CHECKMATE!");
+      alert("Hurray you won!");
     } else if (whiteCheckmated) {
       this.setState({
         gameOver: true,
+        messageID: "Hurray you won!",
       });
-      alert("BLACK WON BY CHECKMATE!");
+      alert("Hurray you won!");
     }
 
     //Do opponent move
@@ -123,7 +147,7 @@ class Puzzle extends React.Component {
     const update1 = currentGame.movePiece(
       selectedId,
       finalPosition,
-      false
+      !isMyMove
     );
     console.log(update1);
     if (update1 === "moved in the same position.") {
@@ -162,6 +186,14 @@ class Puzzle extends React.Component {
       blackKingInCheck: blackKingInCheck,
       gameIndex: index + 1,
     });
+
+    if (index + 1 >= this.state.moves.length) {
+      console.log("Hurray, you won!");
+      this.setState({
+        messageID: "Congratulations! You have successfully completed this puzzle!",
+      })
+      return;
+    }
 
     if (blackCheckmated) {
       this.setState({
@@ -336,7 +368,7 @@ class Puzzle extends React.Component {
             md={2}
             fontFamily="serif"
           >
-            Invalid move!
+            {this.state.messageID}
           </Typography>
         </Grid>
       </Box>

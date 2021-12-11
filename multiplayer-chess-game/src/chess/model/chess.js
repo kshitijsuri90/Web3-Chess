@@ -7,7 +7,7 @@ import Square from "./square";
  */
 
 class Game {
-  constructor(thisPlayersColorIsWhite, newGame = true, chessBoard = []) {
+  constructor(thisPlayersColorIsWhite, newGame = true, chessBoard = [], chess=undefined) {
     this.thisPlayersColorIsWhite = thisPlayersColorIsWhite; // once initialized, this value should never change.
     console.log(this.thisPlayersColorIsWhite ? "White" : "Black");
     // console.log("this player's color is white: " + this.thisPlayersColorIsWhite)
@@ -15,6 +15,9 @@ class Game {
       ? this.makeStartingBoard()
       : this.makeBoard(chessBoard); // the actual chessBoard
     this.chess = new Chess();
+    if(chess != undefined){
+      this.chess = chess;
+    }
     this.moves = [];
     this.index = -1;
 

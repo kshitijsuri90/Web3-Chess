@@ -7,12 +7,12 @@ function PuzzleListItem(props) {
     <div
       className="card"
       onClick={() => {
-        props.goToGame(props);
+        props.onClick(props.data);
       }}
     >
       <div className="container">
         <div>
-          <h1>Name: {props.name} </h1>
+          <h1>{props.name} </h1>
           <h3>creator: {props.creator}</h3>
         </div>
         <div>

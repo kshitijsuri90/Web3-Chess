@@ -1,4 +1,4 @@
-import React from 'react';
+import React , {useState, useEffect} from 'react';
 import { BrowserRouter as Router, Route, Redirect, Switch } from 'react-router-dom';
 import JoinRoom from './onboard/joinroom';
 import { ColorContext } from './context/colorcontext';
@@ -9,6 +9,9 @@ import Puzzles from './pages/puzzles';
 import Marketplace from './pages/marketplace';
 import Home from './containers/Home';
 import firebase from "firebase";
+import Header from './components/Header';
+import { getWeb3 } from './utils';
+
 /*
  *  Frontend flow: 
  * 
@@ -38,7 +41,40 @@ import firebase from "firebase";
 
 function App() {
 
-  const [didRedirect, setDidRedirect] = React.useState(false)
+  const [didRedirect, setDidRedirect] = useState(false)
+  const [web3, setWeb3] = useState(undefined);
+  const [accounts, setAccounts] = useState(undefined);
+
+  useEffect(() => {
+    const init = async () => {
+      const web3 = await getWeb3();
+      const accountsmain = await window.ethereum.request({ method: 'eth_requestAccounts' });
+
+      const accounts = await web3.eth.getAccounts();
+      console.log("get accounts", accountsmain);
+      const networkId = await web3.eth.net.getId();
+      // const deployedNetwork = Lottery.networks[networkId];
+      // const contract = new web3.eth.Contract(
+      //   Lottery.abi,
+      //   deployedNetwork && deployedNetwork.address,
+      // );
+
+      // const [houseFee, state] = await Promise.all([
+      //   contract.methods.houseFee().call(),
+      //   contract.methods.currentState().call()
+      // ]);
+
+      setWeb3(web3);
+      setAccounts(accounts);
+      //setContract(contract);
+      //setHouseFee(houseFee);
+      //setBet({state: 0});
+    }
+    init();
+    window.ethereum.on('accountsChanged', accounts => {
+      setAccounts(accounts);
+    });
+  }, []);
 
   const playerDidRedirect = React.useCallback(() => {
     setDidRedirect(true)
@@ -48,12 +84,15 @@ function App() {
     setDidRedirect(false)
   }, [])
 
-  const [userName, setUserName] = React.useState('')
-  const [time, setTime] = React.useState()
-  const [stake, setStake] = React.useState()
+  const [userName, setUserName] = useState('')
+  const [time, setTime] = useState()
+  const [stake, setStake] = useState();
   const firebaseApp = firebase.apps[0];
 
   return (
+    <>
+    <Header accounts={accounts !== undefined && accounts} />
+
     <ColorContext.Provider
       value={{
         didRedirect: didRedirect,
@@ -100,8 +139,9 @@ function App() {
           <Redirect to="/" />
         </Switch>
       </Router>
-    </ColorContext.Provider>
+    </ColorContext.Provider> </>
   );
+  
 }
 
 export default App;

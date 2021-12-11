@@ -24,7 +24,7 @@ class Puzzle extends React.Component {
     gameOver: false,
     startIndexOfNFT: 0,
     endIndexOFNFT: 0,
-    gameIndex: -1,
+    gameIndex: 0,
     isMyMove: this.props.color ? true : false,
     firstMove: this.props.firstMove,
     submitNFT: false,
@@ -36,6 +36,7 @@ class Puzzle extends React.Component {
     this.setState({
       moves: this.props.moves,
     });
+    this.executeFirstMove();
   }
 
   startDragging = (e) => {
@@ -43,6 +44,10 @@ class Puzzle extends React.Component {
       draggedPieceTargetId: e.target.attrs.id,
     });
   };
+
+  executeFirstMove(){
+    this.movePiece(this.state.moves.selectedId, this.state.moves.finalPosition, this.state.gameState, );
+  }
 
   movePiece = (selectedId, finalPosition, currentGame, isMyMove, isUndo) => {
     var whiteKingInCheck = false;

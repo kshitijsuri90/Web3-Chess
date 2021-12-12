@@ -162,7 +162,8 @@ function App() {
       Betting.abi,
       deployedNetwork && deployedNetwork.address
     );
-    const matchId = web3.fromAscii(id);
+    const matchId =
+      "0x6c00000000000000000000000000000000000000000000000000000000000000";
     await contract.methods
       .startMatchWhite(amount, matchId)
       .send({ from: accounts[0] });
@@ -212,11 +213,14 @@ function App() {
             {accounts !== undefined && <Home accounts={accounts[0]} />}
           </Route>
           <Route path="/newGame" exact>
-            <Onboard
-              setUserName={setUserName}
-              setTime={setTime}
-              setStake={setStake}
-            />
+            {web3 !== undefined && networkId !== undefined && (
+              <Onboard
+                startGameWhite={startGameWhite}
+                setUserName={setUserName}
+                setTime={setTime}
+                setStake={setStake}
+              />
+            )}
           </Route>
           <Route path="/wallet" exact>
             <WalletProfile />
@@ -239,7 +243,7 @@ function App() {
                 <ChessGame myUserName={userName} time={time} stake={stake} />
               </React.Fragment>
             ) : (
-              <JoinRoom />
+              <JoinRoom startGameBlack={startGameBlack} />
             )}
           </Route>
           <Redirect to="/" />

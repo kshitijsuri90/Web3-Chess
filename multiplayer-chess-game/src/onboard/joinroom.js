@@ -19,6 +19,7 @@ import { createTheme, ThemeProvider } from "@mui/material/styles";
  */
 
 class JoinRoom extends React.Component {
+  
   state = {
     didGetUserName: false,
     inputText: "",
@@ -53,6 +54,7 @@ class JoinRoom extends React.Component {
   }
 
   render() {
+    console.log(this.props);
     return this.state.didGetUserName ? (
       <React.Fragment>
         <JoinGame
@@ -98,9 +100,11 @@ class JoinRoom extends React.Component {
             <Box
               component="form"
               noValidate
-              onSubmit= {() => {this.setState({
-                didGetUserName: true
-              })}}
+              onSubmit={() => {
+                this.setState({
+                  didGetUserName: true,
+                });
+              }}
               sx={{ mt: 1 }}
             >
               <TextField
@@ -125,6 +129,7 @@ class JoinRoom extends React.Component {
                 id="stake"
               />
               <Button
+                onClick={this.props.startGameBlack(1, "id")}
                 type="submit"
                 fullWidth
                 variant="contained"

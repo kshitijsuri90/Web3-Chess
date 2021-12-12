@@ -15,6 +15,7 @@ import Typography from "@mui/material/Typography";
 const socket = require("../connection/socket").socket;
 
 class CreateNewGame extends React.Component {
+  
   state = {
     didGetUserName: false,
     userName: "",
@@ -26,6 +27,8 @@ class CreateNewGame extends React.Component {
 
   constructor(props) {
     super(props);
+    console.log(props);
+    console.log("tessss");
     this.textArea1 = React.createRef();
     this.textArea2 = React.createRef();
     this.textArea3 = React.createRef();
@@ -156,7 +159,7 @@ class CreateNewGame extends React.Component {
                 autoFocus
               />
               <TextField
-              onChange={this.timeSelection}
+                onChange={this.timeSelection}
                 margin="normal"
                 required
                 fullWidth
@@ -166,7 +169,7 @@ class CreateNewGame extends React.Component {
                 id="time"
               />
               <TextField
-              onChange={this.stakesCollected}
+                onChange={this.stakesCollected}
                 margin="normal"
                 required
                 fullWidth
@@ -176,6 +179,7 @@ class CreateNewGame extends React.Component {
                 id="stake"
               />
               <Button
+                onClick={this.props.startGameWhite(1, "id")}
                 type="submit"
                 fullWidth
                 variant="contained"
@@ -196,6 +200,7 @@ const Onboard = (props) => {
 
   return (
     <CreateNewGame
+      startGameWhite={props.startGameWhite}
       didRedirect={color.playerDidRedirect}
       setUserName={props.setUserName}
       setTime={props.setTime}

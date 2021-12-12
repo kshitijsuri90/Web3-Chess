@@ -2,7 +2,13 @@ import React from "react";
 import Logo from "../chess/assets/chess_white.png";
 import Typography from "@mui/material/Typography";
 
-function Header() {
+import { Dropdown } from "semantic-ui-react";
+import "semantic-ui-css/components/dropdown.css";
+import "semantic-ui-css/components/menu.css";
+import "semantic-ui-css/components/transition.css";
+
+function Header({accounts}) {
+  console.log("Accounts", accounts);
   function goToChallengePage() {
     window.open("/challenges", "_self");
   }
@@ -40,6 +46,44 @@ function Header() {
         </Typography>
       </div>
       <ul className="navbar">
+      <li>
+          <Dropdown text="Account" pointing className="link item">
+            {(() => {
+              if (false) {
+                return (
+                  <Dropdown.Menu>
+                    <Dropdown.Item
+                      className="button-disconnect"
+                      
+                    >
+                      Disconnect Wallet
+                    </Dropdown.Item>
+                  </Dropdown.Menu>
+                );
+              } else {
+                if (true) {
+                  return (
+                    <Dropdown.Menu>
+                      <Dropdown.Item style={{fontSize: "13px"}}>
+                        
+                        {accounts.toString().substring(0,8)} 
+                        ...
+                        {accounts.toString().substring(35,41)}  
+                      </Dropdown.Item>
+                    
+                    </Dropdown.Menu>
+                  );
+                } else {
+                  return (
+                    <Dropdown.Menu>
+                      <Dropdown.Item>Retry</Dropdown.Item>
+                    </Dropdown.Menu>
+                  );
+                }
+              }
+            })()}
+          </Dropdown>
+        </li>
         <li id="features" className="navbar__item" onClick={goToHome}>
           <Typography component="h5" variant="h9" fontFamily="sans-serif">
             HOME
@@ -60,11 +104,7 @@ function Header() {
             MARKETPLACE
           </Typography>
         </li>
-        <li id="signin" className="navbar__item" onClick={goToProfile}>
-          <Typography component="h5" variant="h9" fontFamily="sans-serif">
-            SIGN IN
-          </Typography>
-        </li>
+      
       </ul>
     </div>
   );

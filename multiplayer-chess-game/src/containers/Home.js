@@ -5,10 +5,10 @@ import Cta from "../components/Cta";
 import Footer from "../components/Footer";
 import Form from '../components/Form';
 
-function Home() {
+function Home({accounts}) {
   return (
     <div className="Home">
-      <Hero/>
+      <Hero accounts={accounts}/>
       <Cta />
       <Footer /> 
     </div>

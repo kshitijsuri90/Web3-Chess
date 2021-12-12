@@ -39,7 +39,7 @@ class ChallengePage extends React.Component {
   render() {
     return (
       <div className="Home">
-        <Header />
+        <Header accounts={this.props.accounts} />
         <div className="header__navbar">
           <h1>Live Challenges</h1>
         </div>

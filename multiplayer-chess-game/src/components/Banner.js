@@ -13,10 +13,10 @@ function joinGame(){
   console.log("Join game");
 }
 
-function Banner() {
+function Banner({accounts}) {
   return (
     <div style={{ height: "100vh" }}>
-      <Header />
+      <Header accounts={accounts}/>
       <section className="banner_section">
         <img src={Heroimg} alt="" className="hero__img" />
         <div className="hero__section">

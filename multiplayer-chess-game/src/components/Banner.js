@@ -2,7 +2,6 @@ import React from "react";
 import Heroimg from "../chess/assets/banner.png";
 import JoinGame from "../onboard/joingame";
 import Button from "./Button";
-import Header from "./Header";
 
 function createGame(){
   console.log("Create game");
@@ -16,7 +15,6 @@ function joinGame(){
 function Banner() {
   return (
     <div style={{ height: "100vh" }}>
-      <Header />
       <section className="banner_section">
         <img src={Heroimg} alt="" className="hero__img" />
         <div className="hero__section">

@@ -17,9 +17,9 @@ import firebase from "firebase";
 import Header from "./components/Header";
 import { getWeb3 } from "./utils";
 
-import Token from "./contracts/Token.json";
-import Betting from "./contracts/Betting.json";
-import Puzzles from "./contracts/NFT.json";
+import Token from "./../../chesstopia/artifacts/contracts/Token.sol/Token.json";
+import Betting from "./../../chesstopia/artifacts/contracts/Betting.sol/Staking.json";
+import PuzzlesC from "./../../chesstopia/artifacts/contracts/NFT.sol/Puzzles.json";
 
 import Challenge from './containers/Challenges';
 import WalletProfile from './containers/WalletProfile';
@@ -116,18 +116,18 @@ function App() {
   };
 
   const mintPuzzle = async (url) => {
-    const deployedNetwork = Puzzles.network[networkId];
+    const deployedNetwork = PuzzlesC.network[networkId];
     const contract = new web3.eth.Contract(
-      Puzzles.abi,
+      PuzzlesC.abi,
       deployedNetwork && deployedNetwork.address
     );
     await contract.methods.mint(accounts[0], url).send({ from: accounts[0] });
   };
 
   const purchasePuzzle = async (tokenId, contractAddress) => {
-    const deployedNetwork = Puzzles.network[networkId];
+    const deployedNetwork = PuzzlesC.network[networkId];
     const contract = new web3.eth.Contract(
-      Puzzles.abi,
+      PuzzlesC.abi,
       deployedNetwork && deployedNetwork.address
     );
     await contract.methods
@@ -135,9 +135,9 @@ function App() {
       .send({ from: accounts[0] });
   };
   const claimPuzzle = async (counter) => {
-    const deployedNetwork = Puzzles.network[networkId];
+    const deployedNetwork = PuzzlesC.network[networkId];
     const contract = new web3.eth.Contract(
-      Puzzles.abi,
+      PuzzlesC.abi,
       deployedNetwork && deployedNetwork.address
     );
     await contract.methods.claimReward(counter).send({ from: accounts[0] });

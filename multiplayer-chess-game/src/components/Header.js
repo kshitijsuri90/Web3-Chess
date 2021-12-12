@@ -88,13 +88,13 @@ function Header({ accounts }) {
           <a href="/">App</a>
         </li>
         <li id="features" className="navbar__item" onClick={goToChallengePage}>
-          <a href="/challenge"> Challenge </a>
+          <a href="/challenges"> Challenge </a>
         </li>
         <li id="features" className="navbar__item" onClick={goToPuzzles}>
           <a href="/puzzles"> Puzzles </a>
         </li>
         <li id="team" className="navbar__item">
-          <a href="/marketplace"> Marketplace </a>
+          <a href="/puzzles"> Marketplace </a>
         </li>
                 <li id="signin" className="navbar__item" onClick={goToProfile}>
 <a href="/wallet"> Wallet </a>

@@ -1,15 +1,13 @@
 import React from "react";
-import Logo from "../chess/assets/logo.svg";
 import { Dropdown } from "semantic-ui-react";
 import "semantic-ui-css/components/dropdown.css";
 import "semantic-ui-css/components/menu.css";
 import "semantic-ui-css/components/transition.css";
-
-function Header({ accounts }) {
 import Logo from "../chess/assets/chess_white.png";
 import Typography from "@mui/material/Typography";
 
-function Header() {
+function Header({ accounts }) {
+
   function goToChallengePage() {
     window.open("/challenges", "_self");
   }

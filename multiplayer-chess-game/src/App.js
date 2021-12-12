@@ -17,13 +17,15 @@ import firebase from "firebase";
 import Header from "./components/Header";
 import { getWeb3 } from "./utils";
 
-import Token from "./../../chesstopia/artifacts/contracts/Token.sol/Token.json";
-import Betting from "./../../chesstopia/artifacts/contracts/Betting.sol/Staking.json";
-import PuzzlesC from "./../../chesstopia/artifacts/contracts/NFT.sol/Puzzles.json";
+import Token from "./chesstopia/artifacts/contracts/Token.sol/Token.json";
+import Betting from "./chesstopia/artifacts/contracts/Betting.sol/Staking.json";
+import PuzzlesC from "./chesstopia/artifacts/contracts/NFT.sol/Puzzles.json";
 
 import Challenge from './containers/Challenges';
 import WalletProfile from './containers/WalletProfile';
 import PuzzlePage from "./containers/PuzzlesPage";
+const IPFS = require('ipfs')
+const OrbitDB = require('orbit-db')
 
 /*
  *  Frontend flow:
@@ -52,11 +54,19 @@ import PuzzlePage from "./containers/PuzzlesPage";
  */
 
 function App() {
-  const ipfs = await IPFS.create();
-  const orbitdb = await OrbitDB.createInstance(ipfs);
 
   const [web3, setWeb3] = useState(undefined);
   const [accounts, setAccounts] = useState(undefined);
+  const [networkId, setNetworkId] = useState(undefined);
+  const [didRedirect, setDidRedirect] = React.useState(false)
+
+  const playerDidRedirect = React.useCallback(() => {
+    setDidRedirect(true)
+  }, [])
+
+  const playerDidNotRedirect = React.useCallback(() => {
+    setDidRedirect(false)
+  }, [])
 
   useEffect(() => {
     const init = async () => {
@@ -67,7 +77,8 @@ function App() {
 
       const accounts = await web3.eth.getAccounts();
       console.log("get accounts", accountsmain);
-      const networkId = await web3.eth.net.getId();
+      const net = await web3.eth.net.getId();
+      setNetworkId(net);
 
       // const deployedNetwork = Lottery.networks[networkId];
       // const contract = new web3.eth.Contract(
@@ -102,12 +113,18 @@ function App() {
   };
 
   const setData = async (id, data) => {
+    const ipfs = await IPFS.create();
+    const orbitdb = await OrbitDB.createInstance(ipfs);
+  
     const db = await orbitdb.log(id);
     await db.load();
     const hash = await db.add(data);
   };
 
   const getData = async (id) => {
+    const ipfs = await IPFS.create();
+    const orbitdb = await OrbitDB.createInstance(ipfs);
+  
     const db = await orbitdb.log(id);
     await db.load();
     const result = db.iterator({ limit: -1 }).collect();

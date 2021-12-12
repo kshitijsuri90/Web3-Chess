@@ -1,8 +1,12 @@
 import React from "react";
+import { Dropdown } from "semantic-ui-react";
+import "semantic-ui-css/components/dropdown.css";
+import "semantic-ui-css/components/menu.css";
+import "semantic-ui-css/components/transition.css";
 import Logo from "../chess/assets/chess_white.png";
 import Typography from "@mui/material/Typography";
 
-function Header() {
+function Header({ accounts }) {
   function goToChallengePage() {
     window.open("/challenges", "_self");
   }
@@ -18,7 +22,6 @@ function Header() {
   function goToPuzzles() {
     window.open("/puzzles", "_self");
   }
-
 
   return (
     <div className="header__navbar">
@@ -40,30 +43,60 @@ function Header() {
         </Typography>
       </div>
       <ul className="navbar">
-        <li id="features" className="navbar__item" onClick={goToHome}>
-          <Typography component="h5" variant="h9" fontFamily="sans-serif">
-            HOME
-          </Typography>
+        <li>
+          <Dropdown text="Account" pointing className="link item">
+            {(() => {
+              if (false) {
+                return (
+                  <Dropdown.Menu>
+                    <Dropdown.Item className="button-disconnect">
+                      Disconnect Wallet
+                    </Dropdown.Item>
+                  </Dropdown.Menu>
+                );
+              } else {
+                if (true) {
+                  return (
+                    <Dropdown.Menu>
+                      <Dropdown.Item style={{ fontSize: "13px" }}>
+                        {accounts.toString().substring(0, 8)}
+                        ...
+                        {accounts.toString().substring(35, 41)}
+                      </Dropdown.Item>
+                    </Dropdown.Menu>
+                  );
+                } else {
+                  return (
+                    <Dropdown.Menu>
+                      <Dropdown.Item>Retry</Dropdown.Item>
+                    </Dropdown.Menu>
+                  );
+                }
+              }
+            })()}
+          </Dropdown>
+        </li>
+
+        <li
+          id="features"
+          className="navbar__item"
+          onClick={goToHome}
+          id="features"
+          className="navbar__item"
+        >
+          <a href="/">App</a>
         </li>
         <li id="features" className="navbar__item" onClick={goToChallengePage}>
-          <Typography component="h5" variant="h9" fontFamily="sans-serif">
-            BOUNTIES
-          </Typography>
+          <a href="/challenges"> Challenge </a>
         </li>
         <li id="features" className="navbar__item" onClick={goToPuzzles}>
-          <Typography component="h5" variant="h9" fontFamily="sans-serif">
-            PUZZLES
-          </Typography>
+          <a href="/puzzles"> Puzzles </a>
         </li>
         <li id="team" className="navbar__item">
-          <Typography component="h5" variant="h9" fontFamily="sans-serif">
-            MARKETPLACE
-          </Typography>
+          <a href="/puzzles"> Marketplace </a>
         </li>
         <li id="signin" className="navbar__item" onClick={goToProfile}>
-          <Typography component="h5" variant="h9" fontFamily="sans-serif">
-            SIGN IN
-          </Typography>
+          <a href="/wallet"> Wallet </a>
         </li>
       </ul>
     </div>

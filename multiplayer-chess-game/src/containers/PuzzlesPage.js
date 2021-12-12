@@ -93,7 +93,7 @@ class PuzzlePage extends React.Component {
       <Puzzle moves={this.state.puzzleMoves} gameState={this.state.gameState} />
     ) : (
       <div className="Home">
-        <Header />
+        <Header accounts={this.props.accounts}/>
         <div className="header__navbar">
           <h1>Puzzles</h1>
         </div>

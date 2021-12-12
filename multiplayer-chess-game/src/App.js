@@ -21,6 +21,10 @@ import Token from "./contracts/Token.json";
 import Betting from "./contracts/Betting.json";
 import Puzzles from "./contracts/NFT.json";
 
+import Challenge from './containers/Challenges';
+import WalletProfile from './containers/WalletProfile';
+import PuzzlePage from "./containers/PuzzlesPage";
+
 /*
  *  Frontend flow:
  *
@@ -182,54 +186,57 @@ function App() {
 
   return (
     <>
-      <Header accounts={accounts !== undefined && accounts} />
-      <ColorContext.Provider
-        value={{
-          didRedirect: didRedirect,
-          playerDidRedirect: playerDidRedirect,
-          playerDidNotRedirect: playerDidNotRedirect,
-        }}
-      >
-        <Router>
-          <Switch>
-            <Route path="/" exact>
-              <Home />
-            </Route>
-            <Route path="/newGame" exact>
-              <Onboard
-                setUserName={setUserName}
-                setTime={setTime}
-                setStake={setStake}
-              />
-            </Route>
-            <Route path="/puzzles" exact>
-              <Puzzles />
-            </Route>
+          <Header accounts={accounts !== undefined && accounts} />
 
-            <Route path="/marketplace" exact>
-              <Marketplace />
-            </Route>
-
-            <Route path="/game/:gameid" exact>
-              {didRedirect ? (
-                <React.Fragment>
-                  <JoinGame
-                    userName={userName}
-                    isCreator={true}
-                    time={time}
-                    stake={stake}
-                  />
-                  <ChessGame myUserName={userName} time={time} stake={stake} />
-                </React.Fragment>
-              ) : (
-                <JoinRoom />
-              )}
-            </Route>
-            <Redirect to="/" />
-          </Switch>
-        </Router>
-      </ColorContext.Provider>{" "}
-    </>
+    <ColorContext.Provider
+      value={{
+        didRedirect: didRedirect,
+        playerDidRedirect: playerDidRedirect,
+        playerDidNotRedirect: playerDidNotRedirect,
+      }}
+    >
+      <Router>
+        <Switch>
+          <Route path="/" exact>
+            <Home />
+          </Route>
+          <Route path="/newGame" exact>
+            <Onboard
+              setUserName={setUserName}
+              setTime={setTime}
+              setStake={setStake}
+            />
+          </Route>
+          <Route path="/wallet" exact>
+            <WalletProfile
+            />
+          </Route>
+          <Route path="/puzzles" exact>
+            <PuzzlePage/>
+          </Route>
+          <Route path="/challenges" exact>
+            <Challenge />
+          </Route>
+          <Route path="/game/:gameid" exact>
+            {didRedirect ? (
+              <React.Fragment>
+                <JoinGame
+                  userName={userName}
+                  isCreator={true}
+                  time={time}
+                  stake={stake}
+                />
+                <ChessGame myUserName={userName} time={time} stake={stake} />
+              </React.Fragment>
+            ) : (
+              <JoinRoom />
+            )}
+          </Route>
+          <Redirect to="/" />
+        </Switch>
+      </Router>
+    </ColorContext.Provider>
+</>
   );
 }
 

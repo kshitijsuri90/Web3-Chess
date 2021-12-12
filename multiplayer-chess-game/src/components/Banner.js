@@ -1,5 +1,6 @@
 import React from "react";
-import Heroimg from "../chess/assets/illustration-intro.png";
+import Heroimg from "../chess/assets/banner.png";
+import JoinGame from "../onboard/joingame";
 import Button from "./Button";
 
 function createGame(){
@@ -13,18 +14,17 @@ function joinGame(){
 
 function Banner() {
   return (
-    <div style={{ height: "auto" }}>
+    <div style={{ height: "100vh" }}>
       <section className="banner_section">
         <img src={Heroimg} alt="" className="hero__img" />
         <div className="hero__section">
-          <h1 className="hero__CTA">Earn your way while playing Chess.</h1>
-          <p className="hero__desc">
-            Challenge your friends for a chess watch. Winner takes all. Mint
-            NFTs and earn coins too.
-          </p>
-          <div className="header__navbar">
-            <Button text="Create Game" onClick={createGame}/>
-            <Button text="Join Game" onClick={joinGame}/>
+          <h1 className="hero__CTA">Welcome to Chesstopia</h1>
+          <h3 className="hero__desc">
+            Winner takes all. Mint NFTs and earn coins too.
+          </h3>
+          <div className="button_section">
+            <Button text="Create Game" onClick={createGame} />
+            <Button text="Create Challenge" onClick={joinGame} />
           </div>
         </div>
       </section>

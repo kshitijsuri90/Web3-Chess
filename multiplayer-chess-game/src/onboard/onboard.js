@@ -40,6 +40,7 @@ class CreateNewGame extends React.Component {
      * with a unique identifier.
      */
     var newGameRoomId = uuid();
+    console.log("Create game");
     this.props.didRedirect();
     this.props.setUserName(this.state.userName);
     this.props.setTime(this.state.time);
@@ -179,8 +180,7 @@ class CreateNewGame extends React.Component {
                 id="stake"
               />
               <Button
-                onClick={this.props.startGameWhite(1, "id")}
-                type="submit"
+                onClick={this.send}
                 fullWidth
                 variant="contained"
                 sx={{ mt: 3, mb: 2 }}

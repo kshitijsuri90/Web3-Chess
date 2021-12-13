@@ -19,7 +19,6 @@ import { createTheme, ThemeProvider } from "@mui/material/styles";
  */
 
 class JoinRoom extends React.Component {
-  
   state = {
     didGetUserName: false,
     inputText: "",
@@ -45,12 +44,13 @@ class JoinRoom extends React.Component {
     });
   };
 
-  send() {
+  send = () => {
+    this.props.startGameBlack(1, "id");
     console.log("Submit");
-    // console.log(this.state);
-    // this.setState({
-    //   didGetUserName: true,
-    // });
+    console.log(this.state);
+    this.setState({
+      didGetUserName: true,
+    });
   }
 
   render() {
@@ -129,8 +129,7 @@ class JoinRoom extends React.Component {
                 id="stake"
               />
               <Button
-                onClick={this.props.startGameBlack(1, "id")}
-                type="submit"
+                onClick={this.send}
                 fullWidth
                 variant="contained"
                 sx={{ mt: 3, mb: 2 }}

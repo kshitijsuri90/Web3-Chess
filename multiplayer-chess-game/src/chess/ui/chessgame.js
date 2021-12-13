@@ -526,6 +526,7 @@ const ChessGameWrapper = (props) => {
 
   React.useEffect(() => {
     socket.on("playerJoinedRoom", (statusUpdate) => {
+      console.log(socket.id);
       console.log(statusUpdate);
       console.log(
         "A new player has joined the room! Username: " +
@@ -539,7 +540,8 @@ const ChessGameWrapper = (props) => {
           "Stake: " +
           statusUpdate.stake
       );
-      if (socket.id !== statusUpdate.mySocketId) {
+      if (socket.id != statusUpdate.mySocketId) {
+        console.log("Going in loop");
         setOpponentSocketId(statusUpdate.mySocketId);
         setOpponentStake(statusUpdate.stake);
         setOpponentUserName(statusUpdate.userName);
@@ -548,16 +550,16 @@ const ChessGameWrapper = (props) => {
       }
     });
 
-    socket.on("status", (statusUpdate) => {
-      console.log(statusUpdate);
-      alert(statusUpdate);
-      if (
-        statusUpdate === "This game session does not exist." ||
-        statusUpdate === "There are already 2 people playing in this room."
-      ) {
-        doesntExist(true);
-      }
-    });
+    // socket.on("status", (statusUpdate) => {
+    //   console.log(statusUpdate);
+    //   alert(statusUpdate);
+    //   if (
+    //     statusUpdate === "This game session does not exist." ||
+    //     statusUpdate === "There are already 2 people playing in this room."
+    //   ) {
+    //     doesntExist(true);
+    //   }
+    // });
 
     socket.on("start game", (idData) => {
       console.log("START!");

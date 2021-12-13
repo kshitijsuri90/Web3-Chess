@@ -70,8 +70,13 @@ function playerJoinsGame(idData) {
         this.emit('status' , "This game session does not exist." );
         return
     }
-    if (room.length < 2) {
+    console.log(room.length);
+    console.log(room);
+    console.log("break");
+    console.log(idData);
+    if (room.length < 3) {
         // attach the socket id to the data object.
+        
         idData.mySocketId = sock.id;
 
         // Join the room

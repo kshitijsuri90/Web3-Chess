@@ -1,4 +1,4 @@
-import { Redirect } from "react-router-dom";
+import { Navigate } from "react-router-dom";
 import uuid from "uuid/v4";
 import { ColorContext } from "../context/colorcontext";
 import * as React from "react";
@@ -97,7 +97,7 @@ class CreateNewGame extends React.Component {
   render() {
     // !!! TODO: edit this later once you have bought your own domain.
     return this.state.didGetUserName ? (
-      <Redirect to={"/game/" + this.state.gameId}>
+      <Navigate to={"/game/" + this.state.gameId}>
         <button
           className="btn btn-success"
           style={{
@@ -107,7 +107,7 @@ class CreateNewGame extends React.Component {
         >
           Start Game
         </button>
-      </Redirect>
+      </Navigate>
     ) : (
       <Grid container component="main" sx={{ height: "100vh" }}>
         <CssBaseline />

@@ -2,8 +2,8 @@ import React, { useState, useEffect } from "react";
 import {
   BrowserRouter as Router,
   Route,
-  Redirect,
-  Switch,
+  Navigate,
+  Routes,
 } from "react-router-dom";
 import JoinRoom from "./onboard/joinroom";
 import { ColorContext } from "./context/colorcontext";
@@ -157,28 +157,28 @@ function App() {
     await contract.methods.claimReward(counter).send({ from: accounts[0] });
   };
   const startGameWhite = async (amount, id) => {
-    const deployedNetwork = Betting.networks[networkId];
-    const contract = new web3.eth.Contract(
-      Betting.abi,
-      deployedNetwork && deployedNetwork.address
-    );
-    const matchId =
-      "0x6c00000000000000000000000000000000000000000000000000000000000000";
-    await contract.methods
-      .startMatchWhite(amount, matchId)
-      .send({ from: accounts[0] });
+    // const deployedNetwork = Betting.networks[networkId];
+    // const contract = new web3.eth.Contract(
+    //   Betting.abi,
+    //   deployedNetwork && deployedNetwork.address
+    // );
+    // const matchId =
+    //   "0x6c00000000000000000000000000000000000000000000000000000000000000";
+    // await contract.methods
+    //   .startMatchWhite(amount, matchId)
+    //   .send({ from: accounts[0] });
   };
 
   const startGameBlack = async (amount, id) => {
-    const deployedNetwork = Betting.networks[networkId];
-    const contract = new web3.eth.Contract(
-      Betting.abi,
-      deployedNetwork && deployedNetwork.address
-    );
-    const matchId = web3.fromAscii(id);
-    await contract.methods
-      .startMatchBlack(amount, matchId)
-      .send({ from: accounts[0] });
+    // const deployedNetwork = Betting.networks[networkId];
+    // const contract = new web3.eth.Contract(
+    //   Betting.abi,
+    //   deployedNetwork && deployedNetwork.address
+    // );
+    // const matchId = web3.fromAscii(id);
+    // await contract.methods
+    //   .startMatchBlack(amount, matchId)
+    //   .send({ from: accounts[0] });
   };
 
   const finishGame = async (winner, id) => {
@@ -208,46 +208,57 @@ function App() {
       }}
     >
       <Router>
-        <Switch>
-          <Route path="/" exact>
-            {accounts !== undefined && <Home accounts={accounts[0]} />}
-          </Route>
-          <Route path="/newGame" exact>
-            {web3 !== undefined && networkId !== undefined && (
-              <Onboard
-                startGameWhite={startGameWhite}
-                setUserName={setUserName}
-                setTime={setTime}
-                setStake={setStake}
-              />
-            )}
-          </Route>
-          <Route path="/wallet" exact>
-            <WalletProfile />
-          </Route>
-          <Route path="/puzzles" exact>
-            {accounts !== undefined && <PuzzlePage accounts={accounts[0]} />}
-          </Route>
-          <Route path="/challenges" exact>
-            {accounts !== undefined && <Challenge accounts={accounts[0]} />}
-          </Route>
-          <Route path="/game/:gameid" exact>
-            {didRedirect ? (
-              <React.Fragment>
-                <JoinGame
-                  userName={userName}
-                  isCreator={true}
-                  time={time}
-                  stake={stake}
+        <Routes>
+          <Route
+            path="/"
+            element={accounts !== undefined && <Home accounts={accounts[0]} />}
+          ></Route>
+          <Route
+            path="/newGame"
+            element={
+              web3 !== undefined &&
+              networkId !== undefined && (
+                <Onboard
+                  startGameWhite={startGameWhite}
+                  setUserName={setUserName}
+                  setTime={setTime}
+                  setStake={setStake}
                 />
-                <ChessGame myUserName={userName} time={time} stake={stake} />
-              </React.Fragment>
-            ) : (
-              <JoinRoom startGameBlack={startGameBlack} />
-            )}
-          </Route>
-          <Redirect to="/" />
-        </Switch>
+              )
+            }
+          ></Route>
+          <Route path="/wallet" element={<WalletProfile />}></Route>
+          <Route
+            path="/puzzles"
+            element={
+              accounts !== undefined && <PuzzlePage accounts={accounts[0]} />
+            }
+          ></Route>
+          <Route
+            path="/challenges"
+            element={
+              accounts !== undefined && <Challenge accounts={accounts[0]} />
+            }
+          ></Route>
+          <Route
+            path="/game/:gameid"
+            element={
+              didRedirect ? (
+                <React.Fragment>
+                  <JoinGame
+                    userName={userName}
+                    isCreator={true}
+                    time={time}
+                    stake={stake}
+                  />
+                  <ChessGame myUserName={userName} time={time} stake={stake} />
+                </React.Fragment>
+              ) : (
+                <JoinRoom startGameBlack={startGameBlack} />
+              )
+            }
+          ></Route>
+        </Routes>
       </Router>
     </ColorContext.Provider>
   );

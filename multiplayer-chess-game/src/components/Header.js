@@ -38,13 +38,19 @@ function Header({ accounts }) {
           className="logo"
           style={{ width: "50px", height: "50px", marginRight: "20px" }}
         />
-        <Typography component="h1" variant="h5" fontFamily="monospace">
+        <Typography
+          component="h1"
+          variant="h5"
+          fontFamily="Lato"
+          color="black"
+          sx={{ fontSize: "30px" }}
+        >
           PROJECT CHESSTOPIA
         </Typography>
       </div>
       <ul className="navbar">
         <li>
-          <Dropdown text="Account" pointing className="link item">
+          <Dropdown text="Account" pointing className="link item" color="white" fontFamily="Lato">
             {(() => {
               if (false) {
                 return (
@@ -84,19 +90,59 @@ function Header({ accounts }) {
           id="features"
           className="navbar__item"
         >
-          <a href="/">App</a>
+          <Typography
+            component="h1"
+            variant="h5"
+            fontFamily="Lato"
+            color="white"
+            sx={{ fontSize: "22px" }}
+          >
+            HOME
+          </Typography>
         </li>
         <li id="features" className="navbar__item" onClick={goToChallengePage}>
-          <a href="/challenges"> Challenge </a>
+          <Typography
+            component="h1"
+            variant="h5"
+            fontFamily="Lato"
+            color="white"
+            sx={{ fontSize: "22px" }}
+          >
+            CHALLENGES
+          </Typography>
         </li>
         <li id="features" className="navbar__item" onClick={goToPuzzles}>
-          <a href="/puzzles"> Puzzles </a>
+          <Typography
+            component="h1"
+            variant="h5"
+            fontFamily="Lato"
+            color="white"
+            sx={{ fontSize: "22px" }}
+          >
+            PUZZLES
+          </Typography>
         </li>
         <li id="team" className="navbar__item">
-          <a href="/puzzles"> Marketplace </a>
+          <Typography
+            component="h1"
+            variant="h5"
+            fontFamily="Lato"
+            color="white"
+            sx={{ fontSize: "22px" }}
+          >
+            MARKETPLACE
+          </Typography>
         </li>
         <li id="signin" className="navbar__item" onClick={goToProfile}>
-          <a href="/wallet"> Wallet </a>
+          <Typography
+            component="h1"
+            variant="h5"
+            fontFamily="Lato"
+            color="white"
+            sx={{ fontSize: "22px" }}
+          >
+            WALLET
+          </Typography>
         </li>
       </ul>
     </div>

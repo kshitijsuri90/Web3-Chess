@@ -16,6 +16,7 @@ import Paper from "@mui/material/Paper";
 import Typography from "@mui/material/Typography";
 import SimpleCountdownTimer from "../../components/Timer";
 import Divider from "@mui/material/Divider";
+import Background from "../assets/chess_join1.jpg";
 
 const socket = require("../../connection/socket").socket;
 
@@ -111,7 +112,7 @@ class ChessGame extends React.Component {
       this.revertToPreviousState(selectedId);
       return;
     }
-    console.log(this.state.gameState.chessBoard)
+    console.log(this.state.gameState.chessBoard);
     allMoves.push({ selectedId: selectedId, finalPosition: finalPosition });
     this.props.addMove((oldArray) => [
       ...oldArray,
@@ -604,11 +605,7 @@ const ChessGameWrapper = (props) => {
   }, []);
 
   return gameOver ? (
-    <NFTPage
-      moves={moves}
-      gameId={gameid}
-      color={color.didRedirect}
-    />
+    <NFTPage moves={moves} gameId={gameid} color={color.didRedirect} />
   ) : (
     <React.Fragment>
       {opponentDidJoinTheGame ? (
@@ -620,11 +617,11 @@ const ChessGameWrapper = (props) => {
               gameId={gameid}
               color={color.didRedirect}
               time={Number(time)}
-              myUserName = {props.myUserName}
-              opponentUserName ={opponentUserName}
-              myStake = {props.stake}
-              opponentStake = {opponentStake}
-              addMove ={addMove}
+              myUserName={props.myUserName}
+              opponentUserName={opponentUserName}
+              myStake={props.stake}
+              opponentStake={opponentStake}
+              addMove={addMove}
             />
           </Grid>
         </Box>
@@ -658,36 +655,62 @@ const ChessGameWrapper = (props) => {
           </h1>
         </div>
       ) : (
-        <div>
-          <h1
-            style={{
-              textAlign: "center",
-              marginTop: String(window.innerHeight / 8) + "px",
+        <div
+          style={{
+            backgroundPosition: "end",
+            backgroundRepeat: "no-repeat",
+            backgroundImage: `url(${Background})`,
+            backgroundSize:"cover",
+            justifyContent: "center",
+            width: "100vw",
+            height: "100vh",
+          }}
+        >
+          <Grid
+            item
+            xs={12}
+            sx={{
+              width: "100vw",
+              height: "100vh",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              flexDirection: "column",
+              backgroundPosition: "center",
+              backgroundRepeat: "no-repeat",
             }}
           >
-            Hey <strong>{props.myUserName}</strong>, copy and paste the URL
-            below to send to your friend:
-          </h1>
-          <textarea
-            style={{
-              marginLeft: String(window.innerWidth / 2 - 290) + "px",
-              marginTop: "30" + "px",
-              width: "580px",
-              height: "30px",
-            }}
-            onFocus={(event) => {
-              console.log("sd");
-              event.target.select();
-            }}
-            value={domainName + "/game/" + gameid}
-            type="text"
-          ></textarea>
-          <br></br>
-
-          <h1 style={{ textAlign: "center", marginTop: "100px" }}>
-            {" "}
-            Waiting for other opponent to join the game...{" "}
-          </h1>
+            <Grid item xs={12} sm={12} md={2}>
+              <Typography
+                inline
+                component="h1"
+                variant="h5"
+                fontFamily="Lato"
+                color="white"
+                sx={{ fontSize: "25px" }}
+              >
+                Hey <strong>{props.myUserName}</strong>, copy and paste the URL
+                below to send to your friend:
+              </Typography>
+            </Grid>
+            <Grid item xs={12} sm={5} md={5}>
+              <textarea
+                style={{
+                  marginTop: "30" + "px",
+                  width: "580px",
+                  height: "30px",
+                }}
+                onFocus={(event) => {
+                  console.log("sd");
+                  event.target.select();
+                }}
+                value={domainName + "/game/" + gameid}
+                type="text"
+              ></textarea>
+              <br></br>
+            </Grid>
+            <Grid item xs={12} sm={3} md={3} pt={6}></Grid>
+          </Grid>
         </div>
       )}
     </React.Fragment>

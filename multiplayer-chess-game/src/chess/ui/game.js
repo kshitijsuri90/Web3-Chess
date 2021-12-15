@@ -180,6 +180,7 @@ class ChessGame extends React.Component {
     console.log(this.state.startIndexOfNFT);
     console.log(this.state.endIndexOFNFT);
     console.log(this.state.initialNFTGameState);
+    this.props.mintPuzzle("url");
     this.setState({
       submitNFT: true,
     });

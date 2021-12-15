@@ -25,7 +25,7 @@ const outBox = {
   marginTop: "50px",
 };
 
-function WalletProfile(props) {
+function WalletProfile({accounts, balance, getTokens}) {
   return (
     <Box sx={{ ...outBox, justifyContent: "center" }}>
       <Box
@@ -59,7 +59,7 @@ function WalletProfile(props) {
                   md={2}
                   fontFamily="serif"
                 >
-                  Wallet: "Add wallet address here"
+                  Wallet: <span style={{fontSize: "17px"}}> {accounts!== undefined && accounts[0]}</span>
                 </Typography>
               </Grid>
               <Grid p={2}>
@@ -71,7 +71,7 @@ function WalletProfile(props) {
                   md={2}
                   fontFamily="serif"
                 >
-                  Tokens: "Add token quantity here"
+                  Tokens: {balance}
                 </Typography>
               </Grid>
               <Grid p={2}>
@@ -114,7 +114,7 @@ function WalletProfile(props) {
           </Grid>
         </Grid>
         <Grid item xs={12} ml={15} mr={15}>
-          <Button text="Get Tokens"/>
+          <Button onClick={(e) => getTokens(accounts[0])} text="Get Tokens"/>
         </Grid>
       </Box>
     </Box>

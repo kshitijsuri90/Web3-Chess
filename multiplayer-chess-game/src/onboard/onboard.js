@@ -16,7 +16,6 @@ import { withStyles } from "@material-ui/core/styles";
 const socket = require("../connection/socket").socket;
 
 class CreateNewGame extends React.Component {
-  
   state = {
     didGetUserName: false,
     userName: "",
@@ -35,12 +34,14 @@ class CreateNewGame extends React.Component {
     this.textArea3 = React.createRef();
   }
 
-  send = () => {
+  send = async () => {
     /**
      * This method should create a new room in the '/' namespace
      * with a unique identifier.
      */
+    console.log(this.props);
     var newGameRoomId = uuid();
+    console.log("hello" , newGameRoomId);
     console.log("Create game");
     this.props.didRedirect();
     this.props.setUserName(this.state.userName);
@@ -59,12 +60,14 @@ class CreateNewGame extends React.Component {
 
     // emit an event to the server to create a new room
     socket.emit("createNewGame", newGameRoomId);
+    await this.props.startGameWhite("100000000000", "id");
+
   };
 
   typingUserName = (e) => {
     // grab the input text from the field from the DOM
     const typedText = e.target.value;
-    console.log(typedText)
+    console.log(typedText);
     // set the state with that text
     this.setState({
       userName: typedText,
@@ -158,12 +161,7 @@ class CreateNewGame extends React.Component {
             >
               New Game
             </Typography>
-            <Box
-              component="form"
-              noValidate
-              onSubmit={this.send}
-              sx={{ mt: 1 }}
-            >
+            <Box component="form" noValidate sx={{ mt: 1 }}>
               <TextField
                 inputProps={{
                   style: {

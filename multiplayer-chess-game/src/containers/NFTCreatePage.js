@@ -14,6 +14,8 @@ function NFTCreatePage(props) {
         gameId={props.gameId}
         color={props.color}
         moves={props.moves}
+        mintPuzzle={props.mintPuzzle}
+        claimReward={props.claimReward}
       />
     </div>
   );

@@ -57,6 +57,11 @@ function App() {
   const [networkId, setNetworkId] = useState(undefined);
   const [didRedirect, setDidRedirect] = React.useState(false);
 
+  const [token, setToken] = useState(undefined);
+  const [betting, setBetting] = useState(undefined);
+  const [puzzles, setPuzzles] = useState(undefined);
+  const [balance, setBalance] = useState(0);
+
   const playerDidRedirect = React.useCallback(() => {
     setDidRedirect(true);
   }, []);
@@ -71,42 +76,77 @@ function App() {
       const accountsmain = await window.ethereum.request({
         method: "eth_requestAccounts",
       });
-
-      const accounts = await web3.eth.getAccounts();
-      console.log("get accounts", accountsmain);
+      const accountsa = await web3.eth.getAccounts();
       const net = await web3.eth.net.getId();
-      setNetworkId(net);
+      const deployedNetworkToken = Token.networks[net];
 
-      // const deployedNetwork = Lottery.networks[networkId];
-      // const contract = new web3.eth.Contract(
-      //   Lottery.abi,
-      //   deployedNetwork && deployedNetwork.address,
-      // );
+      const contractToken = new web3.eth.Contract(
+        Token.abi,
+        deployedNetworkToken && deployedNetworkToken.address
+      );
+      contractToken.options.address =
+        "0x91391B107f329d13C2066982C01D00d0b89EF943";
+      const balance = await contractToken.methods
+        .balanceOf(accountsmain[0])
+        .call();
+      console.log("balance", balance);
+      setBalance(balance);
+      setToken(contractToken);
 
-      // const [houseFee, state] = await Promise.all([
-      //   contract.methods.houseFee().call(),
-      //   contract.methods.currentState().call()
-      // ]);
+      const deployedNetworkBetting = Betting.networks[networkId];
+      const contractBetting = new web3.eth.Contract(
+        Betting.abi,
+        deployedNetworkBetting && deployedNetworkBetting.address
+      );
+      contractBetting.options.address =
+        "0x2B2370BB8D6F5A5Ffb6cAB9262CcF183D40a81bb";
+      setBetting(contractBetting);
+
+      const puzzleAddress = "0xa16B2B4fD8fe9be8089ac91050157e040c7c6eBf";
+      const deployedNetworkPuzzle = PuzzlesC.networks[networkId];
+      const contractPuzzle = new web3.eth.Contract(
+        PuzzlesC.abi,
+        deployedNetworkPuzzle && deployedNetworkPuzzle.address
+      );
+      contractPuzzle.options.address = puzzleAddress;
+      setPuzzles(contractPuzzle);
+
+      contractBetting.options.address =
+        "0x2B2370BB8D6F5A5Ffb6cAB9262CcF183D40a81bb";
+      setBetting(contractBetting);
 
       setWeb3(web3);
-      setAccounts(accounts);
-      //setContract(contract);
-      //setHouseFee(houseFee);
-      //setBet({state: 0});
+
+      console.log(web3.utils.asciiToHex("2016052820160528"));
+
+      setAccounts(accountsa);
     };
     init();
     window.ethereum.on("accountsChanged", (accounts) => {
       setAccounts(accounts);
     });
   }, []);
-
+  const getTokens = async (address) => {
+    if (token !== undefined) {
+      await Promise.all([
+        token.methods.faucet(address, 10000000).send({ from: address }),
+        // token.methods
+        //   .approveContract("0xa16B2B4fD8fe9be8089ac91050157e040c7c6eBf")
+        //   .send({ from: accounts[0] }),
+        // token.methods
+        //   .approveContract("0x2B2370BB8D6F5A5Ffb6cAB9262CcF183D40a81bb")
+        //   .send({ from: accounts[0] }),
+        token.methods
+          .approve(
+            "0x2B2370BB8D6F5A5Ffb6cAB9262CcF183D40a81bb",
+            "100000000000000000000"
+          )
+          .send({ from: accounts[0] }),
+      ]);
+    }
+  };
   const approveContract = async (address) => {
-    const deployedNetwork = Token.network[networkId];
-    const contract = new web3.eth.Contract(
-      Token.abi,
-      deployedNetwork && deployedNetwork.address
-    );
-    await contract.methods.approveContract(address).send({ from: accounts[0] });
+    await token.methods.approveContract(address).send({ from: accounts[0] });
   };
 
   const setData = async (id, data) => {
@@ -130,12 +170,7 @@ function App() {
   };
 
   const mintPuzzle = async (url) => {
-    const deployedNetwork = PuzzlesC.network[networkId];
-    const contract = new web3.eth.Contract(
-      PuzzlesC.abi,
-      deployedNetwork && deployedNetwork.address
-    );
-    await contract.methods.mint(accounts[0], url).send({ from: accounts[0] });
+    await puzzles.methods.mint(accounts[0], url).send({ from: accounts[0] });
   };
 
   const purchasePuzzle = async (tokenId, contractAddress) => {
@@ -156,40 +191,30 @@ function App() {
     );
     await contract.methods.claimReward(counter).send({ from: accounts[0] });
   };
+
   const startGameWhite = async (amount, id) => {
-    // const deployedNetwork = Betting.networks[networkId];
-    // const contract = new web3.eth.Contract(
-    //   Betting.abi,
-    //   deployedNetwork && deployedNetwork.address
-    // );
-    // const matchId =
-    //   "0x6c00000000000000000000000000000000000000000000000000000000000000";
-    // await contract.methods
-    //   .startMatchWhite(amount, matchId)
-    //   .send({ from: accounts[0] });
+    const matchId =
+      "0x6c00000000000000000000000000000000000000000000000000000000000000";
+    console.log("betting", betting);
+    await betting.methods
+      .startMatchWhite(amount, matchId)
+      .send({ from: accounts[0] });
   };
 
   const startGameBlack = async (amount, id) => {
-    // const deployedNetwork = Betting.networks[networkId];
-    // const contract = new web3.eth.Contract(
-    //   Betting.abi,
-    //   deployedNetwork && deployedNetwork.address
-    // );
-    // const matchId = web3.fromAscii(id);
-    // await contract.methods
-    //   .startMatchBlack(amount, matchId)
-    //   .send({ from: accounts[0] });
+    const matchId =
+      "0x6c00000000000000000000000000000000000000000000000000000000000000";
+    //const matchId = web3.fromAscii(id);
+    await betting.methods
+      .startMatchBlack(amount, matchId)
+      .send({ from: accounts[0] });
   };
 
   const finishGame = async (winner, id) => {
+    const matchId =
+      "0x6c00000000000000000000000000000000000000000000000000000000000000";
     // only to be called by the winner.
-    const deployedNetwork = Betting.networks[networkId];
-    const contract = new web3.eth.Contract(
-      Betting.abi,
-      deployedNetwork && deployedNetwork.address
-    );
-    const matchId = web3.fromAscii(id);
-    await contract.methods
+    await betting.methods
       .claimReward(winner, matchId)
       .send({ from: accounts[0] });
   };
@@ -216,18 +241,28 @@ function App() {
           <Route
             path="/newGame"
             element={
-              web3 !== undefined &&
-              networkId !== undefined && (
+              puzzles !== undefined && (
                 <Onboard
                   startGameWhite={startGameWhite}
                   setUserName={setUserName}
                   setTime={setTime}
                   setStake={setStake}
+                  mintPuzzle={mintPuzzle}
+                  claimReward={finishGame}
                 />
               )
             }
           ></Route>
-          <Route path="/wallet" element={<WalletProfile />}></Route>
+          <Route
+            path="/wallet"
+            element={
+              <WalletProfile
+                accounts={accounts}
+                balance={balance}
+                getTokens={getTokens}
+              />
+            }
+          ></Route>
           <Route
             path="/puzzles"
             element={
@@ -251,10 +286,20 @@ function App() {
                     time={time}
                     stake={stake}
                   />
-                  <ChessGame myUserName={userName} time={time} stake={stake} />
+                  <ChessGame
+                    mintPuzzle={puzzles !== undefined && mintPuzzle}
+                    claimReward={finishGame}
+                    myUserName={userName}
+                    time={time}
+                    stake={stake}
+                  />
                 </React.Fragment>
               ) : (
-                <JoinRoom startGameBlack={startGameBlack} />
+                <JoinRoom
+                  mintPuzzle={puzzles !== undefined && mintPuzzle}
+                  claimReward={finishGame}
+                  startGameBlack={startGameBlack}
+                />
               )
             }
           ></Route>

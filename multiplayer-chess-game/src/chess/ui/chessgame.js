@@ -147,13 +147,19 @@ class ChessGame extends React.Component {
         gameOver: true,
       });
       this.props.gameOverMethod(true);
-      alert("WHITE WON BY CHECKMATE!");
+      //alert("WHITE WON BY CHECKMATE!");
+      console.log("claimreward error" , this.props);
+      this.props.claimReward(1, "gameid");
+
     } else if (whiteCheckmated) {
       this.setState({
         gameOver: true,
       });
       this.props.gameOverMethod(true);
-      alert("BLACK WON BY CHECKMATE!");
+      //alert("BLACK WON BY CHECKMATE!");
+      this.props.claimReward(1, "gameid")
+
+
     }
   };
 
@@ -524,7 +530,7 @@ const ChessGameWrapper = (props) => {
   const [gameSessionDoesNotExist, doesntExist] = React.useState(false);
   const [gameOver, gameOverMethod] = React.useState(false);
   const [moves, addMove] = React.useState([]);
-
+  console.log("propsss", props);  
   React.useEffect(() => {
     socket.on("playerJoinedRoom", (statusUpdate) => {
       console.log(socket.id);
@@ -605,7 +611,13 @@ const ChessGameWrapper = (props) => {
   }, []);
 
   return gameOver ? (
-    <NFTPage moves={moves} gameId={gameid} color={color.didRedirect} />
+    <NFTPage
+      mintPuzzle={props.mintPuzzle}
+      moves={moves}
+      gameId={gameid}
+      color={color.didRedirect}
+      claimReward={props.claimReward}
+    />
   ) : (
     <React.Fragment>
       {opponentDidJoinTheGame ? (
@@ -617,11 +629,14 @@ const ChessGameWrapper = (props) => {
               gameId={gameid}
               color={color.didRedirect}
               time={Number(time)}
-              myUserName={props.myUserName}
-              opponentUserName={opponentUserName}
-              myStake={props.stake}
-              opponentStake={opponentStake}
-              addMove={addMove}
+              myUserName = {props.myUserName}
+              opponentUserName ={opponentUserName}
+              myStake = {props.stake}
+              opponentStake = {opponentStake}
+              addMove ={addMove}
+              claimReward={props.claimReward}
+              mintPuzzle={props.mintPuzzle}
+
             />
           </Grid>
         </Box>

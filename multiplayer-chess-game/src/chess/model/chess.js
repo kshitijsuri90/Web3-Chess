@@ -19,6 +19,7 @@ class Game {
       this.chess = chess;
     }
     this.moves = [];
+    this.moveString = "";
     this.index = -1;
 
     this.toCoord = thisPlayersColorIsWhite
@@ -300,7 +301,11 @@ class Game {
     console.log(x + " " + y);
     console.log(this.toChessMove([x, y], to2D));
     console.log("to " + to_x + " " + to_y);
-    this.moves.push({ x: x, y: y, to_x: to_x, to_y: to_y });
+    this.moves.push({ x: x, y: y, to_x: to_x, to_y: to_y , to2D: to2D});
+    var leng = this.moves.length;
+    var str = leng + ". "  + pieceId + "->" + this.toChessMove(to, to2D) + " ";
+    this.moveString+="  " + str + "  ";
+    console.log(this.moveString);
     this.index++;
     console.log(this.toChessMove(to, to2D));
     console.log(pieceId[1]);

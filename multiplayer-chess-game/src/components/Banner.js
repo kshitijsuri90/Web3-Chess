@@ -20,7 +20,7 @@ function Banner({ accounts }) {
   return (
     <div
       style={{
-        background: "linear-gradient(#000000, #0F0F0F)",
+        background: "linear-gradient(#000000, #0E0E0E)",
         justifyContent: "center",
         backgroundPosition: "center",
         backgroundRepeat: "no-repeat",

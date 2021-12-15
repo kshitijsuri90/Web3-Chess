@@ -37,52 +37,12 @@ function Header({ accounts }) {
           variant="h5"
           fontFamily="Lato"
           color="white"
-          sx={{ fontSize: "30px" }}
+          sx={{ fontSize: "25px" }}
         >
           PROJECT CHESSTOPIA
         </Typography>
       </div>
       <ul className="navbar">
-        <li>
-          <Dropdown
-            text="ACCOUNT"
-            pointing
-            className="link item"
-            color="white"
-            style={{ fontFamily: "Lato", fontSize: "20px" }}
-          >
-            {(() => {
-              if (false) {
-                return (
-                  <Dropdown.Menu>
-                    <Dropdown.Item className="button-disconnect">
-                      Disconnect Wallet
-                    </Dropdown.Item>
-                  </Dropdown.Menu>
-                );
-              } else {
-                if (true) {
-                  return (
-                    <Dropdown.Menu>
-                      <Dropdown.Item style={{ fontSize: "13px" }}>
-                        {accounts.toString().substring(0, 8)}
-                        ...
-                        {accounts.toString().substring(35, 41)}
-                      </Dropdown.Item>
-                    </Dropdown.Menu>
-                  );
-                } else {
-                  return (
-                    <Dropdown.Menu>
-                      <Dropdown.Item>Retry</Dropdown.Item>
-                    </Dropdown.Menu>
-                  );
-                }
-              }
-            })()}
-          </Dropdown>
-        </li>
-
         <li
           id="features"
           className="navbar__item"
@@ -100,6 +60,17 @@ function Header({ accounts }) {
             HOME
           </Typography>
         </li>
+        <li id="features" className="navbar__item" onClick={goToChallengePage}>
+          <Typography
+            component="h1"
+            variant="h5"
+            fontFamily="Lato"
+            color="white"
+            sx={{ fontSize: "20px" }}
+          >
+            CHALLENGES
+          </Typography>
+        </li>
         <li id="features" className="navbar__item" onClick={goToPuzzles}>
           <Typography
             component="h1"
@@ -109,6 +80,17 @@ function Header({ accounts }) {
             sx={{ fontSize: "20px" }}
           >
             PUZZLES
+          </Typography>
+        </li>
+        <li id="team" className="navbar__item">
+          <Typography
+            component="h1"
+            variant="h5"
+            fontFamily="Lato"
+            color="white"
+            sx={{ fontSize: "20px" }}
+          >
+            MARKETPLACE
           </Typography>
         </li>
         <li id="signin" className="navbar__item" onClick={goToProfile}>

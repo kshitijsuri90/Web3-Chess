@@ -140,8 +140,6 @@ class CreateNewGame extends React.Component {
           md={5}
           component={Paper}
           elevation={6}
-          square
-          sx={{ background: "linear-gradient(#2F2F2F, #0F0F0F)" }}
         >
           <Box
             sx={{
@@ -156,20 +154,13 @@ class CreateNewGame extends React.Component {
               component="h1"
               variant="h5"
               fontFamily="Lato"
-              color="white"
+              color="black"
               sx={{ fontSize: "45px" }}
             >
               New Game
             </Typography>
             <Box component="form" noValidate sx={{ mt: 1 }}>
               <TextField
-                inputProps={{
-                  style: {
-                    fontFamily: "nunito",
-                    color: "white",
-                    border: "white",
-                  },
-                }}
                 onChange={this.typingUserName}
                 margin="normal"
                 required
@@ -181,13 +172,6 @@ class CreateNewGame extends React.Component {
                 autoFocus
               />
               <TextField
-                inputProps={{
-                  style: {
-                    fontFamily: "nunito",
-                    color: "white",
-                    border: "white",
-                  },
-                }}
                 onChange={this.timeSelection}
                 margin="normal"
                 required
@@ -198,13 +182,6 @@ class CreateNewGame extends React.Component {
                 id="time"
               />
               <TextField
-                inputProps={{
-                  style: {
-                    fontFamily: "nunito",
-                    color: "white",
-                    border: "white",
-                  },
-                }}
                 onChange={this.stakesCollected}
                 margin="normal"
                 required

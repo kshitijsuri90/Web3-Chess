@@ -68,7 +68,7 @@ class SimpleCountdownTimer extends React.Component {
     return (
       <div className="App">
         <div>
-          <Typography component="h1" variant="h3">
+          <Typography component="h1" variant="h5" fontSize="60px">
             {this.state.minutes}:{this.state.seconds}
           </Typography>
         </div>

@@ -28,19 +28,19 @@ class ChessGame extends React.Component {
     blackKingInCheck: false,
     moves: [],
     gameOver: false,
-    startIndexOfNFT: 0,
-    endIndexOFNFT: 0,
+    startIndexOfNFT: -1,
+    endIndexOFNFT: -1,
     gameIndex: -1,
     isMyMove: this.props.color ? true : false,
     initialNFTGameState: null,
     firstMoveInNFt: this.props.color,
     submitNFT: false,
     firstMove: true,
+    buttonMessage: "Start NFT",
   };
 
   componentDidMount() {
-    console.log(this.props.myUserName);
-    console.log(this.props.opponentUserName);
+    console.log(this.props);
     this.setState({
       moves: this.props.moves,
     });
@@ -186,22 +186,29 @@ class ChessGame extends React.Component {
     });
   };
 
-  toChessMove(finalPosition, to2D) {
-    let move;
-
-    if (finalPosition[0] > 100) {
-      move =
-        this.toAlphabet[to2D[finalPosition[0]]] +
-        this.toCoord[to2D[finalPosition[1]]];
-    } else {
-      move = this.toAlphabet[finalPosition[0]] + this.toCoord[finalPosition[1]];
-    }
-
-    console.log("proposed move: " + move)
-    return move;
-  }
-
   makeStart = () => {
+    if (this.state.startIndexOfNFT != -1) {
+      console.log(this.state.buttonMessage);
+      var index = this.state.gameIndex;
+      console.log("Setting end of NFT stage to " + index);
+      console.log(this.state.endIndexOFNFT);
+      var slicedMoves = this.state.moves.slice(
+        this.state.startIndexOfNFT + 1,
+        index + 1,
+      );
+      console.log(slicedMoves);
+      this.setState({
+        moves: slicedMoves,
+      });
+      console.log(this.state.startIndexOfNFT);
+      console.log(this.state.endIndexOFNFT);
+      console.log(this.state.initialNFTGameState);
+      this.props.mintPuzzle("url");
+      this.setState({
+        submitNFT: true,
+      });
+      return;
+    }
     if (!this.state.isMyMove) {
       alert("You can only mint NFT's of your moves");
       return;
@@ -212,7 +219,7 @@ class ChessGame extends React.Component {
     var moves = this.state.moves;
     var isMyMove = true;
     for (let i = 0; i <= this.state.gameIndex; i++) {
-      console.log("Inside loop")
+      console.log("Inside loop");
       const update = thisgame.movePiece(
         this.state.moves[i].selectedId,
         this.state.moves[i].finalPosition,
@@ -221,44 +228,17 @@ class ChessGame extends React.Component {
       console.log(update);
       isMyMove = !isMyMove;
     }
-    // var board = this.state.gameState.chessBoard;
-    // var startingChessBoard = [];
-    // for (var i = 0; i < 8; i++) {
-    //   startingChessBoard.push([]);
-    //   for (var j = 0; j < 8; j++) {
-    //     // j is horizontal
-    //     // i is vertical
-    //     const coordinatesOnCanvas = [(j + 1) * 90 + 15, (i + 1) * 90 + 15];
-    //     const emptySquare = new Square(j, i, null, coordinatesOnCanvas);
-    //     startingChessBoard[i].push(emptySquare);
-    //   }
-    // }
-    // for (var j = 0; j < 8; j++) {
-    //   for (var i = 0; i < 8; i++) {
-    //     var piece = board[j][i].getPiece();
-    //     //console.log(piece);
-    //     if (piece == null) continue;
-    //     startingChessBoard[j][i].setPiece(
-    //       new ChessPiece(piece.name, piece.isAttacked, piece.color, piece.id)
-    //     );
-    //   }
-    // }
-    // thisgame.chessBoard = startingChessBoard;
-    // console.log(startingChessBoard);
     var turn = this.state.playerTurnToMoveIsWhite;
     this.setState({
       startIndexOfNFT: index,
       firstMove: turn,
       initialNFTGameState: thisgame,
+      buttonMessage: "End NFT",
     });
   };
 
   makeEnd = () => {
-    var index = this.state.gameIndex;
-    console.log("Setting end of NFT stage to " + index);
-    this.setState({
-      endIndexOFNFT: index,
-    });
+    
   };
 
   render() {
@@ -280,8 +260,13 @@ class ChessGame extends React.Component {
           width: "100vw",
           height: "100vh",
           display: "flex",
-          marginTop: "50px",
+          paddingTop: "80px",
+          paddingLeft: "50px",
           justifyContent: "center",
+          background: "#000000",
+          justifyContent: "center",
+          backgroundPosition: "center",
+          backgroundRepeat: "no-repeat",
         }}
       >
         <Grid item xs={5} md={6}>
@@ -350,27 +335,88 @@ class ChessGame extends React.Component {
         >
           <Box
             sx={{
-              padding: "20px",
+              m: 1,
+              border: 1,
+              margin: "50px",
+              borderColor: "#383838",
+              height: "20vh",
+              display: "flex",
+              flexDirection: "column",
+            }}
+          >
+            <Typography
+              align="center"
+              component="h4"
+              variant="h5"
+              fontSize="18px"
+              fontFamily="Lato"
+            >
+              {this.state.gameState.moveString}
+            </Typography>
+          </Box>
+          <Box
+            sx={{
               display: "flex",
               flexDirection: "row",
               justifyContent: "center",
             }}
           >
-            <Button text="Previous" onClick={this.goToPreviousMove} />
-            <Button text="Next" onClick={this.makeNextMove} />
+            <div
+              className="border_button"
+              onClick={this.goToPreviousMove}
+              style={{ padding: "10px", width: "200px" }}
+            >
+              <Typography
+                align="center"
+                component="h4"
+                variant="h4"
+                fontSize="28px"
+                fontFamily="Lato"
+              >
+                Previous
+              </Typography>
+            </div>
+            <div
+              className="border_button"
+              onClick={this.makeNextMove}
+              style={{ padding: "10px", width: "200px" }}
+            >
+              <Typography
+                align="center"
+                component="h4"
+                variant="h4"
+                fontSize="28px"
+                fontFamily="Lato"
+              >
+                Next
+              </Typography>
+            </div>
           </Box>
 
           <Box
             sx={{
-              padding: "20px",
               display: "flex",
-              flexDirection: "column",
+              flexDirection: "row",
               justifyContent: "center",
             }}
           >
-            <Button text="Start NFT" onClick={this.makeStart} />
+            <div
+              className="border_button"
+              onClick={this.makeStart}
+              style={{ padding: "10px", width: "200px" }}
+            >
+              <Typography
+                component="h4"
+                variant="h4"
+                fontSize="28px"
+                fontFamily="Lato"
+              >
+                {this.state.buttonMessage}
+              </Typography>
+            </div>
+            {/* <Button text="Start NFT" onClick={this.makeStart} />
             <Button text="End NFT" onClick={this.makeEnd} />
-            <Button text="Submit" onClick={this.submit} />
+            <Button text="Submit" onClick={this.submit} /> */}
           </Box>
         </Grid>
       </Box>

@@ -38,6 +38,7 @@ class ChessGame extends React.Component {
       myUsername: props.myUserName,
       opponentUserName: props.opponentUserName,
       myColour: props.color,
+      moveString: "",
     };
     console.log(props);
     console.log(this.state);
@@ -114,6 +115,7 @@ class ChessGame extends React.Component {
     }
     console.log(this.state.gameState.chessBoard);
     allMoves.push({ selectedId: selectedId, finalPosition: finalPosition });
+    
     this.props.addMove((oldArray) => [
       ...oldArray,
       { selectedId: selectedId, finalPosition: finalPosition },
@@ -148,18 +150,15 @@ class ChessGame extends React.Component {
       });
       this.props.gameOverMethod(true);
       //alert("WHITE WON BY CHECKMATE!");
-      console.log("claimreward error" , this.props);
+      console.log("claimreward error", this.props);
       this.props.claimReward(1, "gameid");
-
     } else if (whiteCheckmated) {
       this.setState({
         gameOver: true,
       });
       this.props.gameOverMethod(true);
       //alert("BLACK WON BY CHECKMATE!");
-      this.props.claimReward(1, "gameid")
-
-
+      this.props.claimReward(1, "gameid");
     }
   };
 
@@ -307,66 +306,118 @@ class ChessGame extends React.Component {
               padding: "20px",
               display: "flex",
               flexDirection: "column",
-              justifyContent: "center",
             }}
           >
-            <Typography
-              align="center"
-              component="h4"
-              variant="h4"
-              fontSize="28px"
-              mt={2}
-              md={2}
-              fontFamily="serif"
+            <Grid
+              sx={{
+                padding: "20px",
+                display: "flex",
+                flexDirection: "column",
+                justifyContent: "space-evenly",
+              }}
             >
-              {this.state.opponentUserName}
-            </Typography>
-            <Typography
-              align="center"
-              component="h4"
-              variant="h4"
-              fontSize="28px"
-              mt={2}
-              md={2}
-              fontFamily="serif"
+              <SimpleCountdownTimer
+                time={this.props.time * 60}
+                playerTurnToMoveIsWhite={this.state.playerTurnToMoveIsWhite}
+                paused={this.state.playerTurnToMoveIsWhite}
+                gameOverMethod={this.props.gameOverMethod}
+              />
+              <Grid
+                sx={{
+                  padding: "20px",
+                  display: "flex",
+                  flexDirection: "row",
+                  justifyContent: "space-evenly",
+                }}
+              >
+                <Typography
+                  align="center"
+                  component="h4"
+                  variant="h4"
+                  fontSize="28px"
+                  mt={2}
+                  fontFamily="serif"
+                >
+                  {this.state.opponentUserName}
+                </Typography>
+                <Typography
+                  align="center"
+                  component="h4"
+                  variant="h4"
+                  fontSize="28px"
+                  mt={2}
+                  fontFamily="serif"
+                >
+                  {this.state.opponentStake}
+                </Typography>
+              </Grid>
+            </Grid>
+            <Grid
+              sx={{
+                padding: "20px",
+                display: "flex",
+                flexDirection: "column",
+                justifyContent: "space-evenly",
+              }}
             >
-              {this.state.opponentStake}
-            </Typography>
-            <SimpleCountdownTimer
-              time={this.props.time * 60}
-              playerTurnToMoveIsWhite={this.state.playerTurnToMoveIsWhite}
-              paused={this.state.playerTurnToMoveIsWhite}
-              gameOverMethod={this.props.gameOverMethod}
-            />
-            <hr style={{ borderTop: "3px solid #bbb" }} />
-            <Typography
-              align="center"
-              component="h4"
-              variant="h4"
-              fontSize="28px"
-              mt={2}
-              md={2}
-              fontFamily="serif"
+              <Grid
+                sx={{
+                  padding: "20px",
+                  display: "flex",
+                  flexDirection: "row",
+                  justifyContent: "space-evenly",
+                }}
+              >
+                <Typography
+                  align="center"
+                  component="h4"
+                  variant="h4"
+                  fontSize="28px"
+                  mt={2}
+                  md={2}
+                  fontFamily="serif"
+                >
+                  {this.state.myUsername}
+                </Typography>
+                <Typography
+                  align="center"
+                  component="h4"
+                  variant="h4"
+                  fontSize="28px"
+                  mt={2}
+                  md={2}
+                  fontFamily="serif"
+                >
+                  {this.state.myStake}
+                </Typography>
+              </Grid>
+              <SimpleCountdownTimer
+                time={this.props.time * 60}
+                playerTurnToMoveIsWhite={this.state.playerTurnToMoveIsWhite}
+                paused={!this.state.playerTurnToMoveIsWhite}
+                gameOverMethod={this.props.gameOverMethod}
+              />
+            </Grid>
+            <Box
+              sx={{
+                m: 1,
+                border: 1,
+                borderColor: "#383838",
+                height: "30vh",
+                display: "flex",
+                flexDirection: "column",
+              }}
             >
-              {this.state.myUsername}
-            </Typography>
-            <Typography
-              align="center"
-              component="h4"
-              variant="h4"
-              fontSize="28px"
-              mt={2}
-              md={2}
-              fontFamily="serif"
-            >
-              {this.state.myStake}
-            </Typography>
-            <SimpleCountdownTimer
-              time={this.props.time * 60}
-              playerTurnToMoveIsWhite={this.state.playerTurnToMoveIsWhite}
-              paused={!this.state.playerTurnToMoveIsWhite}
-              gameOverMethod={this.props.gameOverMethod}
-            />
+              <Typography
+                align="center"
+                component="h4"
+                variant="h5"
+                fontSize="18px"
+                fontFamily="Lato"
+              >
+                {this.state.gameState.moveString}
+              </Typography>
+            </Box>
           </Box>
         </Grid>
       </Box>
@@ -427,7 +478,7 @@ class ChessGame extends React.Component {
             </div>
           </React.Fragment>
         </Grid>
-        <Grid item xs={5} m={2}>
+        <Grid item xs={5} ml={3}>
           <Box
             sx={{
               borderColor: "text.primary",
@@ -439,66 +490,118 @@ class ChessGame extends React.Component {
               padding: "20px",
               display: "flex",
               flexDirection: "column",
-              justifyContent: "center",
             }}
           >
-            <Typography
-              align="center"
-              component="h4"
-              variant="h4"
-              fontSize="28px"
-              mt={2}
-              md={2}
-              fontFamily="serif"
+            <Grid
+              sx={{
+                padding: "20px",
+                display: "flex",
+                flexDirection: "column",
+                justifyContent: "space-evenly",
+              }}
             >
-              {this.state.opponentUserName}
-            </Typography>
-            <Typography
-              align="center"
-              component="h4"
-              variant="h4"
-              fontSize="28px"
-              mt={2}
-              md={2}
-              fontFamily="serif"
+              <SimpleCountdownTimer
+                time={this.props.time * 60}
+                playerTurnToMoveIsWhite={this.state.playerTurnToMoveIsWhite}
+                paused={!this.state.playerTurnToMoveIsWhite}
+                gameOverMethod={this.props.gameOverMethod}
+              />
+              <Grid
+                sx={{
+                  padding: "20px",
+                  display: "flex",
+                  flexDirection: "row",
+                  justifyContent: "space-evenly",
+                }}
+              >
+                <Typography
+                  align="center"
+                  component="h4"
+                  variant="h4"
+                  fontSize="28px"
+                  mt={2}
+                  fontFamily="serif"
+                >
+                  {this.state.opponentUserName}
+                </Typography>
+                <Typography
+                  align="center"
+                  component="h4"
+                  variant="h4"
+                  fontSize="28px"
+                  mt={2}
+                  fontFamily="serif"
+                >
+                  {this.state.opponentStake}
+                </Typography>
+              </Grid>
+            </Grid>
+            <Grid
+              sx={{
+                padding: "20px",
+                display: "flex",
+                flexDirection: "column",
+                justifyContent: "space-evenly",
+              }}
             >
-              {this.state.opponentStake}
-            </Typography>
-            <SimpleCountdownTimer
-              time={this.props.time * 60}
-              playerTurnToMoveIsWhite={this.state.playerTurnToMoveIsWhite}
-              paused={!this.state.playerTurnToMoveIsWhite}
-              gameOverMethod={this.props.gameOverMethod}
-            />
-            <hr style={{ borderTop: "3px solid #bbb" }} />
-            <Typography
-              align="center"
-              component="h4"
-              variant="h4"
-              fontSize="28px"
-              mt={2}
-              md={2}
-              fontFamily="serif"
+              <Grid
+                sx={{
+                  padding: "20px",
+                  display: "flex",
+                  flexDirection: "row",
+                  justifyContent: "space-evenly",
+                }}
+              >
+                <Typography
+                  align="center"
+                  component="h4"
+                  variant="h4"
+                  fontSize="28px"
+                  mt={2}
+                  md={2}
+                  fontFamily="serif"
+                >
+                  {this.state.myUsername}
+                </Typography>
+                <Typography
+                  align="center"
+                  component="h4"
+                  variant="h4"
+                  fontSize="28px"
+                  mt={2}
+                  md={2}
+                  fontFamily="serif"
+                >
+                  {this.state.myStake}
+                </Typography>
+              </Grid>
+              <SimpleCountdownTimer
+                time={this.props.time * 60}
+                playerTurnToMoveIsWhite={this.state.playerTurnToMoveIsWhite}
+                paused={this.state.playerTurnToMoveIsWhite}
+                gameOverMethod={this.props.gameOverMethod}
+              />
+            </Grid>
+            <Box
+              sx={{
+                m: 1,
+                border: 1,
+                borderColor: "#383838",
+                height: "30vh",
+                display: "flex",
+                flexDirection: "column",
+              }}
             >
-              {this.state.myUsername}
-            </Typography>
-            <Typography
-              align="center"
-              component="h4"
-              variant="h4"
-              fontSize="28px"
-              mt={2}
-              md={2}
-              fontFamily="serif"
-            >
-              {this.state.myStake}
-            </Typography>
-            <SimpleCountdownTimer
-              time={this.props.time * 60}
-              playerTurnToMoveIsWhite={this.state.playerTurnToMoveIsWhite}
-              paused={this.state.playerTurnToMoveIsWhite}
-              gameOverMethod={this.props.gameOverMethod}
-            />
+              <Typography
+                align="center"
+                component="h4"
+                variant="h5"
+                fontSize="14px"
+                fontFamily="serif"
+              >
+                {this.state.gameState.moveString}
+              </Typography>
+            </Box>
           </Box>
         </Grid>
       </Box>
@@ -621,7 +724,16 @@ const ChessGameWrapper = (props) => {
   ) : (
     <React.Fragment>
       {opponentDidJoinTheGame ? (
-        <Box mt={2} pt={3} ml={2}>
+        <Box
+          pt={3}
+          pl={2}
+          sx={{
+            backgroundPosition: "end",
+            backgroundRepeat: "no-repeat",
+            background: "#0F0F0F",
+            backgroundSize: "cover",
+          }}
+        >
           <Grid ml={2}>
             <ChessGame
               gameOverMethod={gameOverMethod}
@@ -629,14 +741,13 @@ const ChessGameWrapper = (props) => {
               gameId={gameid}
               color={color.didRedirect}
               time={Number(time)}
-              myUserName = {props.myUserName}
-              opponentUserName ={opponentUserName}
-              myStake = {props.stake}
-              opponentStake = {opponentStake}
-              addMove ={addMove}
+              myUserName={props.myUserName}
+              opponentUserName={opponentUserName}
+              myStake={props.stake}
+              opponentStake={opponentStake}
+              addMove={addMove}
               claimReward={props.claimReward}
               mintPuzzle={props.mintPuzzle}
-
             />
           </Grid>
         </Box>
@@ -675,7 +786,7 @@ const ChessGameWrapper = (props) => {
             backgroundPosition: "end",
             backgroundRepeat: "no-repeat",
             backgroundImage: `url(${Background})`,
-            backgroundSize:"cover",
+            backgroundSize: "cover",
             justifyContent: "center",
             width: "100vw",
             height: "100vh",

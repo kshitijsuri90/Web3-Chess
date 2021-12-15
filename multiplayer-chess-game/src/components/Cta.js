@@ -19,11 +19,11 @@ function Cta() {
         backgroundPosition: "center",
         backgroundRepeat: "no-repeat",
         width: "100vw",
-        height: "80vh",
+        height: "100vh",
       }}
     >
       <Box>
-        <Grid container component="main" sx={{ height: "80h", width: "100vw" }}>
+        <Grid container component="main" sx={{ height: "100vh", width: "100vw" }}>
           <Grid
             item
             xs={12}
@@ -32,7 +32,7 @@ function Cta() {
               flexDirection: "flex-end",
             }}
           >
-            <Grid item xs={11} sm={8}>
+            <Grid item xs={8}>
               <Box
                 sx={{
                   p: 20,
@@ -41,7 +41,7 @@ function Cta() {
               >
                 <Grid
                   item
-                  xs={12}
+                  xs={8}
                   sx={{
                     display: "flex",
                     flexDirection: "column",
@@ -75,7 +75,7 @@ function Cta() {
                 </Grid>
               </Box>
             </Grid>
-            <Grid item xs={12} sm={4} sx={{ height: "80vh" }}>
+            <Grid item xs={4} sm={4} sx={{ height: "80vh" ,width:"20vw" }}>
               <video className="videoTag" autoPlay loop muted>
                 <source src={video} type="video/mp4" />
               </video>

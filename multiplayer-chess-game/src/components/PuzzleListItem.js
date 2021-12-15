@@ -1,59 +1,99 @@
 import React from "react";
 import "../css/card.css";
 import token_img from "../chess/assets/token.png";
+import Typography from "@mui/material/Typography";
+import { Box } from "@mui/material";
+import Grid from "@mui/material/Grid";
+import video from "../chess/assets/chess_video.mp4";
 
 function PuzzleListItem(props) {
   return (
     <div
-      className="card"
-      onClick={() => {
-        props.onClick(props.data);
+      className="border_button"
+      style={{
+        marginLeft: "80px",
+        marginRight: "80px",
+        marginTop: "80px",
       }}
     >
-      <div className="container">
-        <div>
-          <h1>{props.name} </h1>
-          <h3>creator: {props.creator}</h3>
-        </div>
-        <div>
-          <div
-            style={{
-              display: "flex",
-              alignItems: "center",
-              flexWrap: "wrap",
-            }}
+      <Grid
+        item
+        xs={12}
+        sx={{
+          display: "flex",
+          justifyContent: "left",
+        }}
+      >
+        <Grid
+          item
+          xs={8}
+          ml={12}
+          sx={{
+            display: "flex",
+            flexDirection: "column",
+          }}
+        >
+          <Typography
+
+            component="h1"
+            color="white"
+            variant="h4"
+            fontSize="32px"
+            mt={2}
+            fontFamily="Lato"
           >
-            <h1>{props.prize}</h1>
-            <img
-              src={token_img}
-              style={{
-                margin: "10px",
-                width: "50px",
-                height: "50px",
-                borderRadius: "25px",
-              }}
-            ></img>
+            English Trap
+          </Typography>
+          <Typography
+
+            component="h1"
+            variant="h5"
+            fontSize="20px"
+            mt={2}
+            fontFamily="Lato"
+          >
+            Vaibhav
+          </Typography>
+        </Grid>
+        <Grid
+          item
+          xs={2}
+          ml={12}
+          sx={{
+            display: "flex",
+            flexDirection: "column",
+          }}
+        >
+          <div className="border_button" style={{ padding: "10px" }}>
+            <Typography
+              align="center"
+              component="h4"
+              variant="h4"
+              fontSize="18px"
+              fontFamily="Lato"
+            >
+              BUY NOW
+            </Typography>
           </div>
           <div
-            style={{
-              display: "flex",
-              alignItems: "center",
-              flexWrap: "wrap",
+            className="border_button"
+            onClick={() => {
+              props.onClick(props.data);
             }}
+            style={{ padding: "10px" }}
           >
-            <h3>Entry: {props.participationFees}</h3>
-            <img
-              src={token_img}
-              style={{
-                margin: "10px",
-                width: "30px",
-                height: "30px",
-                borderRadius: "25px",
-              }}
-            ></img>
+            <Typography
+              align="center"
+              component="h4"
+              variant="h4"
+              fontSize="18px"
+              fontFamily="Lato"
+            >
+              PLAY NOW
+            </Typography>
           </div>
-        </div>
-      </div>
+        </Grid>
+      </Grid>
     </div>
   );
 }

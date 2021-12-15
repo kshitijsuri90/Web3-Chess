@@ -3,6 +3,7 @@ import PuzzleListItem from "../components/PuzzleListItem";
 import Header from "../components/Header";
 import Puzzle from "../chess/ui/play_puzzle";
 import Game from "../chess/model/chess";
+import Typography from "@mui/material/Typography";
 
 class PuzzlePage extends React.Component {
   state = {
@@ -92,11 +93,27 @@ class PuzzlePage extends React.Component {
     return this.state.isPuzzleClicked ? (
       <Puzzle moves={this.state.puzzleMoves} gameState={this.state.gameState} />
     ) : (
-      <div className="Home">
-        <Header accounts={this.props.accounts}/>
-        <div className="header__navbar">
-          <h1>Puzzles</h1>
-        </div>
+      <div
+        style={{
+          background: "#000000",
+          justifyContent: "center",
+          backgroundPosition: "center",
+          backgroundRepeat: "no-repeat",
+          width: "100vw",
+          height: "600vh",
+        }}
+      >
+        <Header accounts={this.props.accounts} />
+        <Typography
+          align="center"
+          component="h1"
+          variant="h4"
+          fontFamily="Lato"
+          color="white"
+          sx={{ fontSize: "45px" }}
+        >
+          PLAY CHESS NFT
+        </Typography>
         {this.state.puzzles.map((data, id) => {
           console.log(data);
           return <PuzzleListItem data={data} onClick={this.setCurrentPuzzle} />;

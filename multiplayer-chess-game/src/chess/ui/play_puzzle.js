@@ -290,8 +290,13 @@ class Puzzle extends React.Component {
           width: "100vw",
           height: "100vh",
           display: "flex",
-          marginTop: "50px",
+          paddingTop: "80px",
+          paddingLeft: "50px",
           justifyContent: "center",
+          background: "#000000",
+          justifyContent: "center",
+          backgroundPosition: "center",
+          backgroundRepeat: "no-repeat",
         }}
       >
         <Grid item xs={5} md={6}>
@@ -348,10 +353,6 @@ class Puzzle extends React.Component {
           xs={5}
           ml={4}
           sx={{
-            borderColor: "text.primary",
-            m: 1,
-            borderColor: "secondary.main",
-            border: 1,
             width: "20vw",
             height: "80vh",
             display: "flex",
@@ -363,10 +364,10 @@ class Puzzle extends React.Component {
             align="center"
             component="h4"
             variant="h4"
-            fontSize="28px"
+            fontSize="50px"
             mt={2}
             md={2}
-            fontFamily="serif"
+            fontFamily="LATO"
           >
             {this.state.messageID}
           </Typography>

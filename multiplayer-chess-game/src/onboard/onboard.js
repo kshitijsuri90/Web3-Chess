@@ -9,6 +9,7 @@ import Paper from "@mui/material/Paper";
 import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid";
 import Typography from "@mui/material/Typography";
+import { withStyles } from "@material-ui/core/styles";
 /**
  * Onboard is where we create the game room.
  */
@@ -132,7 +133,16 @@ class CreateNewGame extends React.Component {
             backgroundPosition: "center",
           }}
         />
-        <Grid item xs={12} sm={8} md={5} component={Paper} elevation={6} square>
+        <Grid
+          item
+          xs={12}
+          sm={8}
+          md={5}
+          component={Paper}
+          elevation={6}
+          square
+          sx={{ background: "linear-gradient(#2F2F2F, #0F0F0F)" }}
+        >
           <Box
             sx={{
               my: 8,
@@ -142,11 +152,24 @@ class CreateNewGame extends React.Component {
               alignItems: "center",
             }}
           >
-            <Typography component="h1" variant="h5">
-              Create a Game
+            <Typography
+              component="h1"
+              variant="h5"
+              fontFamily="Lato"
+              color="white"
+              sx={{ fontSize: "45px" }}
+            >
+              New Game
             </Typography>
             <Box component="form" noValidate sx={{ mt: 1 }}>
               <TextField
+                inputProps={{
+                  style: {
+                    fontFamily: "nunito",
+                    color: "white",
+                    border: "white",
+                  },
+                }}
                 onChange={this.typingUserName}
                 margin="normal"
                 required
@@ -158,6 +181,13 @@ class CreateNewGame extends React.Component {
                 autoFocus
               />
               <TextField
+                inputProps={{
+                  style: {
+                    fontFamily: "nunito",
+                    color: "white",
+                    border: "white",
+                  },
+                }}
                 onChange={this.timeSelection}
                 margin="normal"
                 required
@@ -168,6 +198,13 @@ class CreateNewGame extends React.Component {
                 id="time"
               />
               <TextField
+                inputProps={{
+                  style: {
+                    fontFamily: "nunito",
+                    color: "white",
+                    border: "white",
+                  },
+                }}
                 onChange={this.stakesCollected}
                 margin="normal"
                 required

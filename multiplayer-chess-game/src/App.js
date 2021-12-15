@@ -85,7 +85,7 @@ function App() {
         deployedNetworkToken && deployedNetworkToken.address
       );
       contractToken.options.address =
-        "0x91391B107f329d13C2066982C01D00d0b89EF943";
+        "0xd22891b2844C710F2a6C66f033F4Aa3b6c75C907";
       const balance = await contractToken.methods
         .balanceOf(accountsmain[0])
         .call();
@@ -99,10 +99,10 @@ function App() {
         deployedNetworkBetting && deployedNetworkBetting.address
       );
       contractBetting.options.address =
-        "0x2B2370BB8D6F5A5Ffb6cAB9262CcF183D40a81bb";
+        "0x8FB54056d69e2247C68fD56968c03217CF9BAaCa";
       setBetting(contractBetting);
 
-      const puzzleAddress = "0xa16B2B4fD8fe9be8089ac91050157e040c7c6eBf";
+      const puzzleAddress = "0x928B430b1E9c9071cC8ab04FE3B5e99491B715ba";
       const deployedNetworkPuzzle = PuzzlesC.networks[networkId];
       const contractPuzzle = new web3.eth.Contract(
         PuzzlesC.abi,
@@ -112,7 +112,7 @@ function App() {
       setPuzzles(contractPuzzle);
 
       contractBetting.options.address =
-        "0x2B2370BB8D6F5A5Ffb6cAB9262CcF183D40a81bb";
+        "0x8FB54056d69e2247C68fD56968c03217CF9BAaCa";
       setBetting(contractBetting);
 
       setWeb3(web3);
@@ -129,7 +129,7 @@ function App() {
   const getTokens = async (address) => {
     if (token !== undefined) {
       await Promise.all([
-        token.methods.faucet(address, 10000000).send({ from: address }),
+        token.methods.faucet(address, "100000000000000000000").send({ from: address }),
         // token.methods
         //   .approveContract("0xa16B2B4fD8fe9be8089ac91050157e040c7c6eBf")
         //   .send({ from: accounts[0] }),

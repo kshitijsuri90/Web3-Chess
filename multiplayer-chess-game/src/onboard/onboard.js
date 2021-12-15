@@ -60,7 +60,7 @@ class CreateNewGame extends React.Component {
 
     // emit an event to the server to create a new room
     socket.emit("createNewGame", newGameRoomId);
-    await this.props.startGameWhite("100000000000", "id");
+    await this.props.startGameWhite("10000000000000000000", "id");
 
   };
 

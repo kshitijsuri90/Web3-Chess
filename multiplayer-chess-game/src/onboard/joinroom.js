@@ -45,7 +45,7 @@ class JoinRoom extends React.Component {
   };
 
   send = () => {
-    this.props.startGameBlack(1, "id");
+    this.props.startGameBlack("10000000000000000000", "id");
     console.log("Submit");
     console.log(this.state);
     this.setState({

@@ -1,3 +1,4 @@
+/* global BigInt */
 import React from "react";
 import "../css/card.css";
 import token_img from "../chess/assets/token.png";
@@ -71,7 +72,7 @@ function WalletProfile({accounts, balance, getTokens}) {
                   md={2}
                   fontFamily="serif"
                 >
-                  Tokens: {balance}
+                  Tokens: {Number(BigInt(balance)/BigInt("1000000000000000000"))}
                 </Typography>
               </Grid>
               <Grid p={2}>

@@ -62,7 +62,7 @@ class JoinRoom extends React.Component {
           stake={this.state.stake}
           isCreator={false}
         />
-        <ChessGame myUserName={this.state.inputText} stake={this.state.stake} />
+        <ChessGame claimReward={this.props.claimReward} mintPuzzle={this.props.mintPuzzle} myUserName={this.state.inputText} stake={this.state.stake} />
       </React.Fragment>
     ) : (
       <Grid container component="main" sx={{ height: "100vh" }}>
